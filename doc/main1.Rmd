@@ -28,9 +28,16 @@ MS_test     <- read.csv("../data/data_sample/MS_sample/data_test.csv")
 ## Step 2 : Transformation
 ```{r}
 source("../lib/MemoryBased.R")
-movie_train <- Transform_m(movie_train)
-movie_test <- Transform_m(movie_test)
-save(movie_train, file = "../output/movie_train.RData")
-save(movie_test, file = "../output/movie_test.RData")
 
+MS_train <- Transform_ms(MS_train)
+MS_test <- Transform_ms(MS_test)
+#save(MS_train, file = "../output/MS_train.RData")
+#save(MS_test, file = "../output/MS_test.RData")
+
+movie_train <- Transform_m(movie_train)
+movie_test  <- Transform_m(movie_test)
+#save(movie_train, file = "../output/movie_train.RData")
+#save(movie_test, file = "../output/movie_test.RData")
 ```
+
+
