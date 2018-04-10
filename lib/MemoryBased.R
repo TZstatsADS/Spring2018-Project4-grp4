@@ -6,11 +6,7 @@ Transform_ms <- function(data){
   table <- matrix(0, nrow = length(user_id), ncol = length(vote_id))
   for(i in 1:length(case_line)){
     start_num <- case_line[i]
-    if(i < length(case_line)){
-      end_num <- case_line[i+1]
-    }else{
-      end_num <- nrow(data)+1
-    }
+    end_num <- ifelse(i < length(case_line), case_line[i+1], nrow(data)+1)
     for(index in (start_num+1):(end_num-1)){
       j <- which(vote_id == data[index,3])
       table[i,j] <- 1
