@@ -1,0 +1,36 @@
+---
+title: "main1"
+author: "Group4"
+date: "4/9/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Step 0: Load the packages
+
+```{r}
+#if (!require("")) install.packages("")
+
+#default the wd to the fold this rmd file exists
+```
+
+## Step 1: Load and process the data
+```{r}
+movie_train <- read.csv("../data/data_sample/eachmovie_sample/data_train.csv")
+movie_test  <- read.csv("../data/data_sample/eachmovie_sample/data_test.csv")
+MS_train    <- read.csv("../data/data_sample/MS_sample/data_train.csv")
+MS_test     <- read.csv("../data/data_sample/MS_sample/data_test.csv")
+```
+
+## Step 2 : Transformation
+```{r}
+source("../lib/MemoryBased.R")
+movie_train <- Transform_m(movie_train)
+movie_test <- Transform_m(movie_test)
+save(movie_train, file = "../output/movie_train.RData")
+save(movie_test, file = "../output/movie_test.RData")
+
+```
