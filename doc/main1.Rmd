@@ -65,3 +65,6 @@ Pearson Correlation & Mean-square-difference & SimRank
 ```
 
 
+## Step 4: Clustering
+
+## Step 5: Selecting Neighbors
