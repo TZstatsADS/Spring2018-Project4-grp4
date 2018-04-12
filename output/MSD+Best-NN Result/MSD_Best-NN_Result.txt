@@ -1,0 +1,5 @@
+# Implementation on Dataset 1: mean-squared-difference + best-n neighbors + ranked scoring
+RS = 32.89752
+
+# Implementation on Dataset 2: mean-squared-difference + best-n neighbors + MAE
+MAE = 1.389495
