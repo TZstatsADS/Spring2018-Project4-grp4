@@ -6,11 +6,7 @@ Transform_ms <- function(data){
   table <- matrix(0, nrow = length(user_id), ncol = length(vote_id))
   for(i in 1:length(case_line)){
     start_num <- case_line[i]
-    if(i < length(case_line)){
-      end_num <- case_line[i+1]
-    }else{
-      end_num <- nrow(data)+1
-    }
+    end_num <- ifelse(i < length(case_line), case_line[i+1], nrow(data)+1)
     for(index in (start_num+1):(end_num-1)){
       j <- which(vote_id == data[index,3])
       table[i,j] <- 1
@@ -32,7 +28,7 @@ Transform_m <- function(data){
     movies <- data[i,2]
     scores <- data[i,4]
     j <- which(columns %in% movies)
-    table[index,j] <- scores
+    table[index,j] <- (scores-1)
   }
   rownames(table) <- rows
   colnames(table) <- columns
@@ -40,3 +36,21 @@ Transform_m <- function(data){
 }
 
 
+
+## Selecting Neighborhoods - Correlation Thresholding & Best-n-estimator
+neighbors.select.both <- function(Simweights, Thresholding = 0.4, bestn){
+  ## Correlation Thresholding + Best-n-estimator
+  ## Input: Simweights: similarity weights matrix
+  ##        Thresholding: min-abs-cor
+  ##        bestn: Best-n-estimator
+  ## Output: A list of neighbors's index for each users
+  top.neighbors = list()
+  coverage = 0
+  for(i in 1:nrow(Simweights)){
+    vec1 = Simweights[i,]
+    index_ = which((abs(vec1) > Thresholding) & (vec1 != 1))
+    top.neighbors[[i]] = index_
+    coverage = coverage + length(top.neighbors[[i]])
+  }
+  return(top.neighbors)
+}
