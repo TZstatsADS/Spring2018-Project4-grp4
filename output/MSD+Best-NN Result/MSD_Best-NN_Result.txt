@@ -2,4 +2,4 @@
 RS = 32.89752
 
 # Implementation on Dataset 2: mean-squared-difference + best-n neighbors + MAE
-MAE = 1.389495
+MAE = 1.16971
