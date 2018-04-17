@@ -1,153 +1,351 @@
 ---
-title: "Project 4 - Example Main Script"
-author: "Jing Wu, Tian Zheng"
-date: "3/22/2017"
-output: pdf_document
+title: "main1"
+author: "Group4"
+date: "4/9/2018"
+output: html_document
 ---
 
-This file is currently a template for implementing one of the suggested papers, Han, Zha, & Giles (2005). Due to the nature of the method, we only implement the method on a subset of the data, "AKumar.txt". In your project, you need to work on the whole dataset. You should follow the same structure as in this tutorial, but update it according to the papers you are assigned.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
-## Step 0: Load the packages, specify directories
+## Step 0: Load the packages
 
 ```{r}
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(text2vec, dplyr, qlcMatrix, kernlab, knitr)
+#if (!require("")) install.packages("")
 
-setwd("~/Dropbox/Project4_WhoIsWho/doc")
-# here replace it with your own path or manually set it in RStudio
-# to where this rmd file is located
+#default the wd to the fold this rmd file exists
 ```
 
 ## Step 1: Load and process the data
-
-For each record in the dataset, there are some information we want to extract and store them in a regular form: canonical author id, coauthors, paper title, publication venue title. You may need to find regular matched in the input string vectors by using regex in R. Here is a tutorial for regular expression in R, which might help you <https://rstudio-pubs-static.s3.amazonaws.com/74603_76cd14d5983f47408fdf0b323550b846.html>
-
 ```{r}
-AKumar <- data.frame(scan("~/Dropbox/Project4_WhoIsWho/data/nameset/AKumar.txt",
-                          what = list(Coauthor = "", Paper = "", Journal = ""),
-                          sep=">", quiet=TRUE),stringsAsFactors=FALSE)
-# This need to be modified for different name set
-
-# extract canonical author id befor "_"
-AKumar$AuthorID <- sub("_.*","",AKumar$Coauthor)
-# extract paper number under same author between "_" and first whitespace
-AKumar$PaperNO <- sub(".*_(\\w*)\\s.*", "\\1", AKumar$Coauthor)
-# delete "<" in AKumar$Coauthor, you may need to further process the coauthor
-# term depending on the method you are using
-AKumar$Coauthor <- gsub("<","",sub("^.*?\\s","", AKumar$Coauthor))
-# delete "<" in AKumar$Paper
-AKumar$Paper <- gsub("<","",AKumar$Paper)
-# add PaperID for furthur use, you may want to combine all the nameset files and 
-# then assign the unique ID for all the citations
-AKumar$PaperID <- rownames(AKumar)
+MS_train    <- read.csv("../data/data_sample/MS_sample/data_train.csv")
+MS_test     <- read.csv("../data/data_sample/MS_sample/data_test.csv")
+movie_train <- read.csv("../data/data_sample/eachmovie_sample/data_train.csv")
+movie_test  <- read.csv("../data/data_sample/eachmovie_sample/data_test.csv")
 ```
 
-## Step 2: Feature design
-
-Following the section 3.1 in the paper, we want to use paper titles to design features for citations. As the notation used in the paper, we want to find a $m$-dimensional citation vector $\alpha_i$ for each citation $i$, $i=1,...,n$. In this dataset, $n=$ `r nrow(AKumar)`. We study "TF-IDF" (term frequency-inverse document frequency) as suggested in the paper.
-
-TF-IDF is a numerical statistics that is intended to reflect how important a word is to a document in a collection or corpus. It is often used as a weighting factor in information retrieval, text mining, and user modeling. The TF-IDF value increases proportionally to the number of times a word appears in the document, but is offset by the frequency of the word in the corpus, which helps to adjust for the fact that some words appear more frequently in general.
-
-$$
-\begin{aligned}
-\mbox{TF}(t) &=\frac{\mbox{Number of times term $t$ appears in a document}}{\mbox{Total number of terms in the document}}\\
-\mbox{IDF}(t) &=\log{\frac{\mbox{Total number of documents}}{\mbox{Number of documents with term $t$ in it}}}\\
-\mbox{TF-IDF}(t) &=\mbox{TF}(t)\times\mbox{IDF}(t)
-\end{aligned}
-$$
-
-To compute TF-IDF, we first need to construct a document-term matrix (DTM). In other words, the first step is to vectorize text by creating a map from words to a vector space. There are some good packages you could use for text mining (probably you have tried during first project, you don't need to follow my code if you are familiar with other package), e.g. *text2vec, tm, tidytext*. Here, we are going to use *text2vec* package. A good tutorial can be found here, <https://cran.r-project.org/web/packages/text2vec/vignettes/text-vectorization.html>.
-
-Let’s first create a vocabulary-based DTM. Here we collect unique terms from all documents and mark each of them with a unique ID using the  `create_vocabulary()` function. We use an iterator to create the vocabulary.
+## Step 2 : Transformation
+Convert the original dataset to a matrix which rows represents users and columns represents items
+For dataset 1 (MS), we assign 0 to those items which users never visited.
+For dataset 2 (Movie), we assign NA to those items which users never rated.
 ```{r}
-it_train <- itoken(AKumar$Paper, 
-             preprocessor = tolower, 
-             tokenizer = word_tokenizer,
-             ids = AKumar$PaperID,
-             # turn off progressbar because it won't look nice in rmd
-             progressbar = FALSE)
-vocab <- create_vocabulary(it_train, stopwords = c("a", "an", "the", "in", "on",
-                                                   "at", "of", "above", "under"))
+source("../lib/MemoryBased.R")
 
-vocab
+MS_train <- Transform_ms(MS_train)
+MS_test <- Transform_ms(MS_test)
+# save(MS_train, file = "../output/MS_train.RData")
+# save(MS_test, file = "../output/MS_test.RData")
+
+movie_train <- Transform_m(movie_train)
+movie_test  <- Transform_m(movie_test)
+# save(movie_train, file = "../output/movie_train.RData")
+# save(movie_test, file = "../output/movie_test.RData")
 ```
 
-Here, we remove pre-defined stopwords, the words like “a”, “the”, “in”, “I”, “you”, “on”, etc, which do not provide much useful information. 
+# Memory-based Algorithm
 
-Now that we have a vocabulary list, we can construct a document-term matrix.
+## Step 3 : Similarity Weight
+Pearson Correlation & Mean-square-difference & SimRank
 ```{r}
-vectorizer <- vocab_vectorizer(vocab)
-dtm_train <- create_dtm(it_train, vectorizer)
+load("../output/MS_train.RData")
+load("../output/MS_test.RData")
+load("../output/movie_train.RData")
+load("../output/movie_test.RData")
+
+#For dataset 1 (MS)
+
+#Pearson Correlation
+#pearson_corr_MS <- pearson_corr(MS_train)
+#save(pearson_corr_MS, file = "pearson_corr_MS.RData")
+
+#Mean-square-difference
+#MSD_w_1 <- MSD_Weight(MS_train)
+#save(MSD_w_1, file = "../output/MSD_Data1.RData")
+
+#SimRank
+#SR_MS <- simrank(MS_train)
+#save(SR-MS, file = "../output/simrank_MS_train")
+
+
+#For dataset 2 (Movie)
+
+#Pearson Correlation
+#pearson_corr_movie <- pearson_corr(movie_train)
+#save(pearson_corr_movie, file = "pearson_corr_movie.RData")
+
+#Mean-square-difference
+#MSD_w_2 <- MSD_Weight(movie_train)
+#save(MSD_w_2, file = "../output/MSD_Data2.RData")
+
 ```
 
-Now we have DTM and can check its dimensions.
+
+## No Variance Weighting
+
+## Step 4: Selecting Neighbors
 ```{r}
-dim(dtm_train)
+# Implementation on Dataset 1
+#BNN_1 <- Select_BNN(MSD_w_1, 20)
+#save(BNN_1, file = "../output/BNN_Data1.RData")
+
+#BNN_SR <- Select_BNN(SR_MS, 20)
+#save(BNN_SR, file = "../output/BNN_SR_Data1.RData")
+
+
+# Implementation on Dataset 2
+#BNN_2 <- Select_BNN(MSD_w_2, 20)
+#save(BNN_2, file = "../output/BNN_Data2.RData")
+
 ```
 
-As you can see, the DTM has `r nrow(dtm_train)` rows, equal to the number of citations, and `r ncol(dtm_train)`, equal to the number of unique terms excluding stopwords.
-
-Then, we want to use DTM to compute TF-IDF transformation on DTM.
+## Step5 : Valuation
 ```{r}
-tfidf <- TfIdf$new()
-dtm_train_tfidf <- fit_transform(dtm_train, tfidf)
+# Implementation on Dataset 1: ranked scoring
+
+## mean-squared-difference + best-n neighbors
+# ZScore_mat_1 <- ZScore_Mat(MSD_w_1, BNN_1, MS_train, MS_test)
+# ms_msd_bnn_rs <- Rank_Score(ZScore_mat_1, MS_test)
+#save(ZScore_mat_1, file = "../output/ZScore_Data1.RData")
+
+# Implementation on Dataset 2: MAE
+
+## mean-squared-difference + best-n neighbors
+# ZScore_mat_2 <- ZScore_Mat(MSD_w_2, BNN_2, movie_train, movie_test)
+# movie_msd_bnn_mae <- MAE(ZScore_mat_2, movie_test)
+
+#save(ZScore_mat_2, file = "../output/ZScore_Data2.RData")
 ```
 
-## Step 3: Clustering
+# Model-based Algorithm
 
-Following suggestion in the paper, we carry out spectral clustering on the Gram matrix of the citation vectors by using R function `specc()` in *kernlab*. The number of clusters is assumed known as stated in the paper.
+## Step 3: Cluster Model
 ```{r}
-start.time <- Sys.time()
-result_sclust <- specc(as.matrix(dtm_train_tfidf), 
-                       centers=length(unique(AKumar$AuthorID)))
-end.time <- Sys.time()
-time_sclust <- end.time - start.time
-table(result_sclust)
+load("../output/movie_train.RData")
+load("../output/movie_test.RData")
+train <- movie_train
+test <- movie_test
+
+
+
+N <- nrow(train)
+M <- ncol(train)
+
+user <- rownames(train)
+movie <- colnames(train)
+
+
+### cluster model
+em_fun <- function(data, C, thres){
+  #Input: train_data, number of classes, threshold to determine convergence
+  #Output: parameters for cluster models: 
+  #    mu: probability of belonging to class c, vector
+  # gamma: probability of scores for a movie given the class, 3 dimentions
+  
+  
+  #========================
+  # Step 1 - initialization
+  #========================
+  set.seed(2)
+  mu <- runif(C)
+  mu <- mu/sum(mu)
+  gamma <- array(NA,c(M,C,6)) #each matrix represents a class
+  #the i,j-th element means the probability of rating jth movie with score i in the class 
+  for(m in 1:M){
+    for(c in 1:C){
+      gamma[m,c,] <- runif(6)
+      gamma[m,c,] <- gamma[m,c,]/sum(gamma[m,c,])
+    }
+  }
+  
+  v <- array(0, c(M,N,7))
+  for(k in 1:6){
+    v[,,k] <- ifelse(t(data)==(k-1), 1, 0)
+    v[,,k] <- ifelse(is.na(v[,,k]), 0, v[,,k])
+    v[,,7] <- v[,,7] + v[,,k]
+  }
+  
+  mu_new <- mu
+  gamma_new <- gamma
+  
+  ## Iterations based on the stop criterion
+  thres1 <- 1000
+  thres2 <- 1000
+  thres1_new <- 0
+  thres2_new <- 0
+  count <- 0
+  
+  while((thres1>thres|thres2>thres)&(abs(thres1-thres1_new)>thres|abs(thres2-thres2_new)>thres))
+  {
+    count <- count + 1
+    print(paste0("iteration = ", count))
+    
+    thres1_new <- thres1
+    thres2_new <- thres2
+    
+    mu <- mu_new
+    gamma <- gamma_new
+    
+    #========================  
+    # Step 2 - Expectation
+    #========================
+    #expectation pi with rows meaning classes and columns meaning users
+    phi <- matrix(0, C, N)
+    
+    for(k in 1:6){
+      phi <- phi + t(log(gamma[,,k]))%*%v[,,k]
+    }
+    phi <- phi-rep(colMeans(phi),each=C)
+    
+    for(c in 1:C){
+      phi[c,] <- mu[c]*exp(phi)[c,]
+    }
+    phi <- ifelse(phi == rep(colSums(phi),each=C), 1, phi/rep(colSums(phi), each=C))
+    
+    #========================
+    # Step 3 - Maximization
+    #========================
+    mu_new <- rowSums(phi)/N  #update mu vector
+    
+    for(k in 1:6){
+      gamma_new[,,k] <- v[,,k]%*%t(phi)/v[,,7]%*%t(phi) #update gamma
+    }
+    
+    gamma_new[gamma_new == 0] <- 10^(-100)
+    if(sum(is.na(gamma_new)) != 0){
+      is_zero <- which(is.na(gamma_new))
+      gamma_new[is_zero] <- rep(1/6, length(is_zero))
+    }
+    
+    ## Check convergence
+    thres1 <- mean(abs(mu_new - mu)) #mean absolute difference of mu
+    thres2 <- 0
+    for(c in 1:C){
+      thres2 <- max(thres2,norm(as.matrix(gamma_new[,c,] - gamma[,c,]), "O"))
+    }
+    print(paste0("threshold1 = ", thres1, " threshold2 = ", thres2))
+  }
+  return(list(mu = mu, gamma = gamma))
+}
+
+#predict score estimate function
+cm_predict <- function(train_df, test_df, par){
+  set.seed(2)
+  mu <- par$mu
+  gamma <- par$gamma
+  C <- length(mu)
+  
+  w <- array(0, c(M,N,7))
+  for(k in 1:6){
+    w[,,k] <- ifelse(t(train_df)==k, 1, 0)
+    w[,,k] <- ifelse(is.na(w[,,k]),0,w[,,k])
+  }
+  w[,,7] <- ifelse(!is.na(t(test_df)), 1, 0)
+  
+  ##using Naive Bayes formula
+  prob <- array(0,c(N,M,7))
+  prob_mu <- matrix(mu, N, C, byrow = TRUE) 
+  phi <- matrix(0, C, N)
+  for(k in 1:6){
+    phi <- phi + t(log(gamma[,,k]))%*%w[,,k]
+  }
+  
+  phi <- exp(phi)
+  
+  den <- matrix(diag(prob_mu%*%phi), N, M, byrow=FALSE)   #denominater in equation (2) of cluster model notes
+  
+  
+  for(k in 1:6){
+    print(paste0("k = ", k))
+    
+    num <- (t(phi)*prob_mu)%*%t(gamma[,,k]) #numerator in equation (2) of cluster model notes
+    prob[,,k] <- ifelse(num==den & num == 0, runif(1)/6, num/den)
+    prob[,,7] <- prob[,,7] + k*prob[,,k]
+  }
+  return(prob[,,7]*t(w[,,7]))
+}
+
+
+### 5-fold cross validation to find best class number C
+set.seed(2)
+K <- 5
+n <- ncol(train)
+m <- nrow(train)
+n.fold <- floor(n/K)
+m.fold <- floor(m/K)
+s <- sample(rep(1:K, c(rep(n.fold, K-1), n-(K-1)*n.fold)))  
+s1 <- sample(rep(1:K, c(rep(m.fold, K-1), m-(K-1)*m.fold)))  
+
+c_list <- c(2,3,6,12)
+validation_error <-  matrix(NA, K, length(c_list))
+
+train_data <- data.frame(matrix(NA, N, M))
+colnames(train_data) <- movie
+rownames(train_data) <- user
+
+test_data <- data.frame(matrix(NA, N, M))
+colnames(test_data) <- movie
+rownames(test_data) <- user
+
+
+#cv 5 folds
+#calculate cv error
+# for(i in 1:K){
+#   train_data[s1 != i, ] <- train[s1 != i, ]
+#   train_data[s1 == i, s != i] <- train[s1==i, s != i]
+#   test_data[s1 == i,s == i] <- train[s1 == i ,s == i]
+#   #write.csv(train_data,paste0("../output/cluster_model_subtrain.csv"))
+#   #write.csv(test_data,paste0("../output/cluster_model_validation.csv"))
+#   
+#   estimate_data <- test_data
+#   
+#   for(c in 1:length(c_list)){
+#     cm_par <- em_fun(data = train_data, C = c_list[c], thres = 0.05)
+#     estimate_data <- cm_predict(train_df = train_data, test_df = test_data, par = cm_par)
+#     validation_error[i,c] <- sum(abs(estimate_data-test_data),na.rm = T)/sum(!is.na(estimate_data-test_data))
+#   }
+# }
+
+#save(validation_error, file=paste0("../output/validation_err.RData"))
+load("../output/validation_err.RData")
+cv_error<-colMeans(validation_error)
+plot(c_list,cv_error,xlab="number of class",ylab="cv-error",col="blue",type="l")
+points(c_list,cv_error,col="red",type="o")
+
+
+class = c_list[which.min(cv_error)]
+print(paste("Best class number is", class))
+
+class <- 6
+
+#best_par <- em_fun(data = train, C = class, thres = 0.01)
+#save(best_par, file = "../output/best_par.RData")
+
+load("../output/best_par.RData")
+
+
+###estimate scores
+
+#estimate <- cm_predict(train, test, best_par)
+
+#write.csv(estimate, paste0("../output/cluster_model_estimate.csv"))
+
+
+estimate <- read.csv("../output/cluster_model_estimate.csv")
+estimate <- estimate[,-1]
+
+# MAE of EM algorithm
+coltest <- colnames(test)
+colnames(estimate) <- movie
+
+coltest <- which(is.element(movie, coltest))
+estimate <- estimate[,coltest]
+
+MAE <- function(pred, true){
+  mae <- sum(abs(pred-test),na.rm = T)/sum(!is.na(abs(pred-test)))
+  return(mae)
+}
+
+error_em<- MAE(estimate,test)
+error_em
 ```
-
-We can also using hierarchical clustering method under the cosine distance. The intention of using a different clustering method is just to let you know how to compare performance between various methods. 
-```{r}
-start.time <- Sys.time()
-docsdissim <- cosSparse(t(dtm_train_tfidf))
-rownames(docsdissim) <- c(1:nrow(dtm_train_tfidf))
-colnames(docsdissim) <- c(1:nrow(dtm_train_tfidf))
-#compute pairwise cosine similarities using cosSparse function in package qlcMatrix
-h <- hclust(as.dist(docsdissim), method = "ward.D")
-result_hclust <- cutree(h,length(unique(AKumar$AuthorID)))
-end.time <- Sys.time()
-time_hclust <- end.time - start.time
-table(result_hclust)
-```
-
-## Step 4: Evaluation
-
-To evaluate the performance of the method, it is required to calculate the degree of agreement between a set of system-output partitions and a set of true partitions. In general, the agreement between two partitioins is measured for a pair of entities within partitions. The basic unit for which pair-wise agreement is assessed is a pair of entities (authors in our case) which belongs to one of the four cells in the following table (Kang et at.(2009)):
-
-\includegraphics[width=500pt]{matching_matrix.png}
-
-Let $M$ be the set of machine-generated clusters, and $G$ the set of gold standard clusters. Then. in the table, for example, $a$ is the number of pairs of entities that are assigned to the same cluster in each of $M$ and $G$. Hence, $a$ and $d$ are interpreted as agreements, and $b$ and $c$ disagreements. When the table is considered as a confusion matrix for a two-class prediction problem, the standard "Precision", "Recall","F1", and "Accuracy" are defined as follows.
-
-$$
-\begin{aligned}
-\mbox{Precision} &=\frac{a}{a+b}\\
-\mbox{Recall}&=\frac{a}{a+c}\\
-\mbox{F1} &=\frac{2\times\mbox{Precision}\times\mbox{Recall}}{\mbox{Precision}+\mbox{Recall}}\\
-\mbox{Accuracy}&=\frac{a+d}{a+b+c+d}
-\end{aligned}
-$$
-
-```{r}
-source('~/Dropbox/Project4_WhoIsWho/lib/evaluation_measures.R')
-matching_matrix_hclust <- matching_matrix(AKumar$AuthorID,result_hclust)
-performance_hclust <- performance_statistics(matching_matrix_hclust)
-matching_matrix_sclust <- matching_matrix(AKumar$AuthorID,result_sclust)
-performance_sclust <- performance_statistics(matching_matrix_sclust)
-compare_df <- data.frame(method=c("sClust","hClust"),
-                         precision=c(performance_sclust$precision, performance_hclust$precision),
-                         recall=c(performance_sclust$recall, performance_hclust$recall),
-                         f1=c(performance_sclust$f1, performance_hclust$f1),
-                         accuracy=c(performance_sclust$accuracy, performance_hclust$accuracy),
-                         time=c(time_sclust,time_hclust))
-kable(compare_df,caption="Comparision of performance for two clustering methods",digits = 2)
-```
-
