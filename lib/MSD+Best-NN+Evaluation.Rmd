@@ -43,7 +43,7 @@ Select_BNN <- function(weight_mat, nnbors){
   rownames(nbor_mat) <- users
   
   for (i in 1:nuser){
-    nbor_mat[i,] <- colnames(weight_mat)[order(weight_mat[i,],decreasing=T)][1:nnbors]
+    nbor_mat[i,] <- colnames(weight_mat)[order(weight_mat[i,],decreasing=T)][2:(nnbors+1)]
   }
   return(nbor_mat)
 }
