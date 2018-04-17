@@ -1,5 +1,5 @@
 ---
-title: "main1"
+title: "main"
 author: "Group4"
 date: "4/9/2018"
 output: html_document
@@ -77,25 +77,58 @@ load("../output/movie_test.RData")
 #Mean-square-difference
 #MSD_w_2 <- MSD_Weight(movie_train)
 #save(MSD_w_2, file = "../output/MSD_Data2.RData")
-
 ```
 
 
 ## No Variance Weighting
 
-## Step 4: Selecting Neighbors
+## Step 4: Selecting Neighbors + predict
 ```{r}
 # Implementation on Dataset 1
+
+# MSD + WT
+
+# MSD + BNN
 #BNN_1 <- Select_BNN(MSD_w_1, 20)
 #save(BNN_1, file = "../output/BNN_Data1.RData")
-
 #BNN_SR <- Select_BNN(SR_MS, 20)
 #save(BNN_SR, file = "../output/BNN_SR_Data1.RData")
 
+# MSD + combine
+
+# PC + WT
+# selected_neighbor_MS <- corr_thresh(pearson_corr_MS, 0.5)
+# selected_neighbor_movie <- corr_thresh(pearson_corr_movie, 0.5)
+
+# PC + BNN
+
+# PC + combine
+
+# Simrank + WT
+
+# Simrank + BNN
+
+# Simrank + combine
+
+
 
 # Implementation on Dataset 2
+
+# MSD + WT
+
+# MSD + BNN
 #BNN_2 <- Select_BNN(MSD_w_2, 20)
 #save(BNN_2, file = "../output/BNN_Data2.RData")
+
+# MSD + combine
+
+
+# PC + WT
+
+# PC + BNN
+
+# PC + combine
+
 
 ```
 
@@ -103,19 +136,55 @@ load("../output/movie_test.RData")
 ```{r}
 # Implementation on Dataset 1: ranked scoring
 
-## mean-squared-difference + best-n neighbors
+# MSD + WT
+
+# MSD + BNN
 # ZScore_mat_1 <- ZScore_Mat(MSD_w_1, BNN_1, MS_train, MS_test)
 # ms_msd_bnn_rs <- Rank_Score(ZScore_mat_1, MS_test)
-#save(ZScore_mat_1, file = "../output/ZScore_Data1.RData")
+# save(ZScore_mat_1, file = "../output/ZScore_Data1.RData")
+
+
+# MSD + combine
+
+
+
+# PC + WT
+
+# PC + BNN
+
+# PC + combine
+
+# Simrank + WT
+
+# Simrank + BNN
+
+# Simrank + combine
+
+
 
 # Implementation on Dataset 2: MAE
 
-## mean-squared-difference + best-n neighbors
+# MSD + WT
+
+
+# MSD + BNN
 # ZScore_mat_2 <- ZScore_Mat(MSD_w_2, BNN_2, movie_train, movie_test)
 # movie_msd_bnn_mae <- MAE(ZScore_mat_2, movie_test)
+# save(ZScore_mat_2, file = "../output/ZScore_Data2.RData")
 
-#save(ZScore_mat_2, file = "../output/ZScore_Data2.RData")
+# MSD + combine
+
+
+# PC + WT
+
+# PC + BNN
+
+# PC + combine
+
 ```
+
+
+
 
 # Model-based Algorithm
 
@@ -125,7 +194,6 @@ load("../output/movie_train.RData")
 load("../output/movie_test.RData")
 train <- movie_train
 test <- movie_test
-
 
 
 N <- nrow(train)
@@ -235,24 +303,25 @@ cm_predict <- function(train_df, test_df, par){
   gamma <- par$gamma
   C <- length(mu)
   
-  w <- array(0, c(M,N,7))
+  v <- array(0, c(M,N,7))
   for(k in 1:6){
-    w[,,k] <- ifelse(t(train_df)==k, 1, 0)
-    w[,,k] <- ifelse(is.na(w[,,k]),0,w[,,k])
+    v[,,k] <- ifelse(t(train_df)==(k-1), 1, 0)
+    v[,,k] <- ifelse(is.na(v[,,k]),0,v[,,k])
   }
-  w[,,7] <- ifelse(!is.na(t(test_df)), 1, 0)
+  v[,,7] <- ifelse(!is.na(t(test_df)), 1, 0)
   
   ##using Naive Bayes formula
   prob <- array(0,c(N,M,7))
   prob_mu <- matrix(mu, N, C, byrow = TRUE) 
   phi <- matrix(0, C, N)
   for(k in 1:6){
-    phi <- phi + t(log(gamma[,,k]))%*%w[,,k]
+    phi <- phi + t(log(gamma[,,k]))%*%v[,,k]
   }
   
   phi <- exp(phi)
   
-  den <- matrix(diag(prob_mu%*%phi), N, M, byrow=FALSE)   #denominater in equation (2) of cluster model notes
+  den <- matrix(diag(prob_mu%*%phi), N, M, byrow=FALSE)   
+  #denominater in equation (2) of cluster model notes
   
   
   for(k in 1:6){
@@ -262,11 +331,12 @@ cm_predict <- function(train_df, test_df, par){
     prob[,,k] <- ifelse(num==den & num == 0, runif(1)/6, num/den)
     prob[,,7] <- prob[,,7] + k*prob[,,k]
   }
-  return(prob[,,7]*t(w[,,7]))
+  return(prob[,,7]*t(v[,,7]))
 }
 
 
-### 5-fold cross validation to find best class number C
+### 5-fold cross validation to find best class number C among c_list(2,3,6,12)
+
 set.seed(2)
 K <- 5
 n <- ncol(train)
@@ -290,27 +360,28 @@ rownames(test_data) <- user
 
 #cv 5 folds
 #calculate cv error
-# for(i in 1:K){
-#   train_data[s1 != i, ] <- train[s1 != i, ]
-#   train_data[s1 == i, s != i] <- train[s1==i, s != i]
-#   test_data[s1 == i,s == i] <- train[s1 == i ,s == i]
-#   #write.csv(train_data,paste0("../output/cluster_model_subtrain.csv"))
-#   #write.csv(test_data,paste0("../output/cluster_model_validation.csv"))
-#   
-#   estimate_data <- test_data
-#   
-#   for(c in 1:length(c_list)){
-#     cm_par <- em_fun(data = train_data, C = c_list[c], thres = 0.05)
-#     estimate_data <- cm_predict(train_df = train_data, test_df = test_data, par = cm_par)
-#     validation_error[i,c] <- sum(abs(estimate_data-test_data),na.rm = T)/sum(!is.na(estimate_data-test_data))
-#   }
-# }
+cv_fun <- function(train_data,test_data){
+ for(i in 1:K){
+  train_data[s1 != i, ] <- train[s1 != i, ]
+  train_data[s1 == i, s != i] <- train[s1==i, s != i]
+  test_data[s1 == i,s == i] <- train[s1 == i ,s == i]
+  #write.csv(train_data,paste0("../output/cluster_model_subtrain.csv"))
+  #write.csv(test_data,paste0("../output/cluster_model_validation.csv"))
 
+  estimate_data <- test_data
+
+  for(c in 1:length(c_list)){
+    cm_par <- em_fun(data = train_data, C = c_list[c], thres = 0.05)
+    estimate_data <- cm_predict(train_df = train_data, test_df = test_data, par = cm_par)
+    validation_error[i,c] <- sum(abs(estimate_data-test_data),na.rm = T)/sum(!is.na(estimate_data-test_data))
+    
+  }}
+  return(validation_error)
+  }
+
+
+#validation_error <- cv_fun(train_data,test_data)
 #save(validation_error, file=paste0("../output/validation_err.RData"))
-load("../output/validation_err.RData")
-cv_error<-colMeans(validation_error)
-plot(c_list,cv_error,xlab="number of class",ylab="cv-error",col="blue",type="l")
-points(c_list,cv_error,col="red",type="o")
 
 
 class = c_list[which.min(cv_error)]
@@ -348,4 +419,21 @@ MAE <- function(pred, true){
 
 error_em<- MAE(estimate,test)
 error_em
+```
+
+# Evaluation comparison 
+```{r}
+
+
+
+
+# Cluster number comparism
+load("../output/validation_err.RData")
+cv_error<-colMeans(validation_error)
+
+# setwd("../figs/")
+# jpeg(file=paste("cv_err",".jpg") )
+plot(c_list,cv_error,xlab="number of class",ylab="cv-error",col="blue",type="l")
+points(c_list,cv_error,col="red",type="o")
+#dev.off()
 ```
