@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Step 0: Load the packages
 
 ```{r}
-#if (!require("")) install.packages("")
+if (!require("kableExtra")) install.packages("kableExtra")
 
 #default the wd to the fold this rmd file exists
 ```
@@ -53,30 +53,30 @@ load("../output/MS_test.RData")
 load("../output/movie_train.RData")
 load("../output/movie_test.RData")
 
-#For dataset 1 (MS)
+##For dataset 1 (MS)
 
-#Pearson Correlation
-#ms_pc <- pearson_corr(MS_train)
-#save(ms_pc, file = "ms_pc.RData")
+##Pearson Correlation
+# ms_pc <- pearson_corr(MS_train)
+# save(ms_pc, file = "../out/put/ms_pc.RData")
 
-#Mean-square-difference
-#ms_msd <- MSD_Weight(MS_train)
-#save(ms_msd, file = "../output/ms_msd.RData")
+##Mean-square-difference
+# ms_msd <- MSD_Weight(MS_train)
+# save(ms_msd, file = "../output/ms_msd.RData")
 
-#SimRank
-#ms_sr <- simrank(MS_train)
-#save(ms_sr, file = "../output/simrank_MS_train.RData")
+##SimRank
+# ms_sr <- simrank(MS_train)
+# save(ms_sr, file = "../output/simrank_MS_train.RData")
 
 
-#For dataset 2 (Movie)
+##For dataset 2 (Movie)
 
-#Pearson Correlation
-#movie_pc <- pearson_corr(movie_train)
-#save(movie_pc, file = "movie_pc.RData")
+##Pearson Correlation
+# movie_pc <- pearson_corr(movie_train)
+# save(movie_pc, file = "../output/movie_pc.RData")
 
-#Mean-square-difference
-#movie_msd <- MSD_Weight(movie_train)
-#save(movie_msd, file = "../output/movie_msd.RData")
+##Mean-square-difference
+# movie_msd <- MSD_Weight(movie_train)
+# save(movie_msd, file = "../output/movie_msd.RData")
 ```
 
 
@@ -84,206 +84,319 @@ load("../output/movie_test.RData")
 
 ## Step 4: Selecting Neighbors
 ```{r}
-# Implementation on Dataset 1
+## Implementation on Dataset 1
 
-# MSD + WT
-# ms_msd_wt <- corr_thresh(ms_msd, 0.5)
-# save(ms_msd_wt, file = "../output/ms_msd_wt.RData")
-
-
-# MSD + BNN
-# ms_msd_bnn <- Select_BNN(ms_msd, 20)
-# save(ms_msd_bnn, file = "../output/ms_msd_bnn.RData")
-
-# MSD + combine
-# ms_msd_combine <- corr_thresh(ms_msd, 0.5)
-# save(ms_msd_combine, file = "../output/ms_msd_combine.RData")
+## MSD + WT
+# ms_msd_wt_0.05 <- corr_thresh(ms_msd, 0.05)
+# save(ms_msd_wt_0.05, file = "../output/Selecting_Neighbors_Results/ms_msd_wt_0.05.RData")
+# ms_msd_wt_0.2 <- corr_thresh(ms_msd, 0.2)
+# save(ms_msd_wt_0.2, file = "../output/Selecting_Neighbors_Results/ms_msd_wt_0.2.RData")
 
 
-# PC + WT
-# ms_pc_wt <- corr_thresh(ms_pc, 0.5)
-# save(ms_pc_wt, file = "../output/ms_pc_wt.RData")
+## MSD + BNN
+# ms_msd_bnn_20 <- Select_BNN(ms_msd, 20)
+# save(ms_msd_bnn_20, file = "../output/Selecting_Neighbors_Results/ms_msd_bnn_20.RData")
+# ms_msd_bnn_40 <- Select_BNN(ms_msd, 40)
+# save(ms_msd_bnn_40, file = "../output/Selecting_Neighbors_Results/ms_msd_bnn_40.RData")
 
-# PC + BNN
-# ms_pc_bnn <- Select_BNN(ms_pc, 20)
-# save(ms_pc_bnn, file = "../output/ms_pc_bnn.RData")
+
+## MSD + combine
+# ms_msd_combine_0.05_40 <- combine(ms_msd, 0.05,40)
+# save(ms_msd_combine, file = "../output/Selecting_Neighbors_Results/ms_msd_combine_0.05_40.RData")
+
+## PC + WT
+# ms_pc_wt_0.05 <- corr_thresh(ms_pc, 0.05)
+# save(ms_pc_wt_0.05, file = "../output/Selecting_Neighbors_Results/ms_pc_wt_0.05.RData")
+# ms_pc_wt_0.2 <- corr_thresh(ms_pc, 0.2)
+# save(ms_pc_wt_0.2, file = "../output/Selecting_Neighbors_Results/ms_pc_wt_0.2.RData")
+
+
+## PC + BNN
+# ms_pc_bnn_20 <- Select_BNN(ms_pc, 20)
+# save(ms_pc_bnn_20, file = "../output/Selecting_Neighbors_Results/ms_pc_bnn_20.RData")
+# ms_pc_bnn_40 <- Select_BNN(ms_pc, 40)
+# save(ms_pc_bnn_40, file = "../output/Selecting_Neighbors_Results/ms_pc_bnn_40.RData")
+
+
+## PC + combine
+# ms_pc_combine_0.05_40 <- combine(ms_pc, 0.005, 40)
+# save(ms_pc_combine_0.05_40, file = "../output/Selecting_Neighbors_Results/ms_pc_combine_0.05_40.RData")
+
+## Simrank + WT
+# ms_sr_wt_0.05 <- corr_thresh(ms_sr, 0.05)
+# save(ms_sr_wt_0.05, file = "../output/Selecting_Neighbors_Results/ms_pc_wt_0.05.RData")
+# ms_sr_wt_0.2 <- corr_thresh(ms_sr, 0.2)
+# save(ms_sr_wt_0.2, file = "../output/Selecting_Neighbors_Results/ms_pc_wt_0.2.RData")
+
+
+## Simrank + BNN
+# ms_sr_bnn_20 <- Select_BNN(ms_sr, 20)
+# save(ms_sr_bnn_20, file = "../output/Selecting_Neighbors_Results/ms_sr_bnn_20.RData")
+# ms_sr_bnn_40 <- Select_BNN(ms_sr, 40)
+# save(ms_sr_bnn_40, file = "../output/Selecting_Neighbors_Results/ms_sr_bnn_40.RData")
+
+
+## Simrank + combine
+# ms_sr_combine_0.05_40 <- combine(ms_sr, 0.005, 40)
+# save(ms_sr_combine_0.05_40, file = "../output/Selecting_Neighbors_Results/ms_sr_combine_0.05_40.RData")
+
+
+
+## Implementation on Dataset 2
+
+## MSD + WT
+# movie_msd_wt_0.05 <- corr_thresh(movie_msd, 0.05)
+# save(movie_msd_wt_0.05, file = "../output/Selecting_Neighbors_Results/movie_msd_wt_0.05.RData")
+# movie_msd_wt_0.2 <- corr_thresh(movie_msd, 0.2)
+# save(movie_msd_wt_0.2, file = "../output/Selecting_Neighbors_Results/movie_msd_wt_0.2.RData")
+
+
+## MSD + BNN
+# movie_msd_bnn_20 <- Select_BNN(movie_msd, 20)
+# save(movie_msd_bnn_20, file = "../output/Selecting_Neighbors_Results/movie_msd_bnn_20.RData")
+# movie_msd_bnn_40 <- Select_BNN(movie_msd, 40)
+# save(movie_msd_bnn_40, file = "../output/Selecting_Neighbors_Results/movie_msd_bnn_40.RData")
+
+
+## MSD + combine
+# movie_msd_combine_0.05_40 <- combine(movie_msd, 0.005, 40)
+# save(movie_msd_combine_0.05_40, file = "../output/Selecting_Neighbors_Results/movie_msd_combine_0.05_40.RData")
+
+
+## PC + WT
+# movie_pc_wt_0.05 <- corr_thresh(movie_pc, 0.05)
+# save(movie_pc_wt_0.05, file = "../outputSelecting_Neighbors_Results//movie_pc_wt_0.05.RData")
+# movie_pc_wt_0.2 <- corr_thresh(movie_pc, 0.2)
+# save(movie_pc_wt_0.2, file = "../outputSelecting_Neighbors_Results//movie_pc_wt_0.2.RData")
+
+
+## PC + BNN
+# movie_pc_bnn_20 <- Select_BNN(movie_pc, 20)
+# save(movie_pc_bnn_20, file = "../output/Selecting_Neighbors_Results/movie_pc_bnn_20.RData")
+# movie_pc_bnn_40 <- Select_BNN(movie_pc, 40)
+# save(movie_pc_bnn_40, file = "../output/Selecting_Neighbors_Results/movie_pc_bnn_40.RData")
+
 
 # PC + combine
-# ms_pc_combine <- combine(ms_pc, 0.005, 20)
-# save(ms_pc_combine, file = "../output/ms_pc_combine.RData")
-
-# Simrank + WT
-# ms_sr_wt <- corr_thresh(ms_sr, 0.5)
-# save(ms_sr_wt, file = "../output/ms_pc_wt.RData")
-
-# Simrank + BNN
-# ms_sr_bnn <- Select_BNN(ms_sr, 20)
-# save(ms_sr_bnn, file = "../output/ms_sr_bnn.RData")
-
-# Simrank + combine
-# ms_sr_combine <- combine(ms_sr, 0.005, 20)
-# save(ms_sr_combine, file = "../output/ms_sr_combine.RData")
-
-
-
-# Implementation on Dataset 2
-
-# MSD + WT
-# movie_msd_wt <- corr_thresh(movie_msd, 0.5)
-# save(movie_msd_wt, file = "../output/movie_msd_wt.RData")
-
-
-# MSD + BNN
-# movie_msd_bnn <- Select_BNN(movie_msd, 20)
-# save(movie_msd_bnn, file = "../output/movie_msd_bnn.RData")
-
-# MSD + combine
-# movie_msd_combine <- combine(movie_msd, 0.005, 20)
-# save(movie_msd_combine, file = "../output/movie_msd_combine.RData")
-
-
-# PC + WT
-# movie_pc_wt <- corr_thresh(movie_pc, 0.5)
-# save(movie_pc_wt, file = "../output/movie_pc_wt.RData")
-
-# PC + BNN
-# movie_pc_bnn <- corr_thresh(movie_pc, 0.5)
-# save(movie_pc_bnn, file = "../output/movie_pc_bnn.RData")
-
-# PC + combine
-# movie_pc_combine <- combine(movie_pc, 0.005, 20)
-# save(movie_pc_combine, file = "../output/movie_pc_combine.RData")
+# movie_pc_combine_0.05_40 <- combine(movie_pc, 0.005, 40)
+# save(movie_pc_combine_0.05_40, file = "../output/Selecting_Neighbors_Results/movie_pc_combine_0.05_40.RData")
 ```
 
 ## Step 5 : Prediction
 ```{r}
-# Implementation on Dataset 1
+## Implementation on Dataset 1
 
-# MSD + WT
-# pred_ms_msd_wt <- avg_dev_pred(MS_train,MS_test,ms_msd, ms_msd_wt)
+## MSD + WT
+# pred_ms_msd_wt_0.05 <- avg_dev_pred(MS_train,MS_test,ms_msd, ms_msd_wt_0.05)
+# save(pred_ms_msd_wt_0.05, "../output/Prediction_Results/pred_ms_msd_wt_0.05.RData")
+# pred_ms_msd_wt_0.2 <- avg_dev_pred(MS_train,MS_test,ms_msd, ms_msd_wt_0.2)
+# save(pred_ms_msd_wt_0.2, "../output/Prediction_Results/pred_ms_msd_wt_0.2.RData")
 
-# MSD + BNN
-# ZScore_ms_msd_bnn<- ZScore_Mat(ms_msd, ms_msd_bnn, MS_train, MS_test)
+## MSD + BNN
+# ZScore_ms_msd_bnn_20 <- ZScore_Mat(ms_msd, ms_msd_bnn_20, MS_train, MS_test)
+# save(ZScore_ms_msd_bnn_20, "../output/Prediction_Results/ZScore_ms_msd_bnn_20.RData")
+# ZScore_ms_msd_bnn_40 <- ZScore_Mat(ms_msd, ms_msd_bnn_40, MS_train, MS_test)
+# save(ZScore_ms_msd_bnn_40, "../output/Prediction_Results/ZScore_ms_msd_bnn_40.RData")
 
-# MSD + combine
-# pred_ms_msd_combine <- avg_dev_pred(MS_train,MS_test,ms_msd, ms_msd_combine)
+
+## MSD + combine
+# pred_ms_msd_combine_0.05_40 <- avg_dev_pred(MS_train,MS_test,ms_msd, ms_msd_combine_0.05_40)
+# save(pred_ms_msd_combine_0.05_40, "../output/Prediction_Results/pred_ms_msd_combine_0.05_40.RData")
 
 
-# PC + WT
-# pred_ms_pc_wt <- avg_dev_pred(MS_train,MS_test,ms_pc, ms_pc_wt)
+## PC + WT
+# pred_ms_pc_wt_0.05 <- avg_dev_pred(MS_train,MS_test,ms_pc, ms_pc_wt_0,05)
+# save(pred_ms_pc_wt_0.05, "../output/Prediction_Results/pred_ms_pc_wt_0.05.RData")
+# pred_ms_pc_wt_0.2 <- avg_dev_pred(MS_train,MS_test,ms_pc, ms_pc_wt_0,2)
+# save(pred_ms_pc_wt_0.2, "../output/Prediction_Results/pred_ms_pc_wt_0.2.RData")
 
-# PC + BNN
-# ZScore_ms_pc_bnn<- ZScore_Mat(ms_pc, ms_pc_bnn, MS_train, MS_test)
+## PC + BNN
+# ZScore_ms_pc_bnn_20 <- ZScore_Mat(ms_pc, ms_pc_bnn_20, MS_train, MS_test)
+# save(ZScore_ms_pc_bnn_20, "../output/Prediction_Results/ZScore_ms_pc_bnn_20.RData")
+# ZScore_ms_pc_bnn_40 <- ZScore_Mat(ms_pc, ms_pc_bnn_40, MS_train, MS_test)
+# save(ZScore_ms_pc_bnn_40, "../output/Prediction_Results/ZScore_ms_pc_bnn_40.RData")
+
+
+## PC + combine
+# pred_ms_pc_combine_0.05_40 <- avg_dev_pred(MS_train,MS_test,ms_pc, ms_pc_combine_0.05_40)
+# save(pred_ms_pc_combine_0.05_40, "../output/Prediction_Results/pred_ms_pc_combine_0.05_40.RData")
+
+
+## Simrank + WT
+# pred_ms_sr_wt_0.05 <- avg_dev_pred(MS_train,MS_test,ms_sr, ms_sr_wt_0.05)
+# save(pred_ms_sr_wt_0.05, "../output/Prediction_Results/pred_ms_sr_wt_0.05.RData")
+# pred_ms_sr_wt_0.2 <- avg_dev_pred(MS_train,MS_test,ms_sr, ms_sr_wt_0.2)
+# save(pred_ms_sr_wt_0.2, "../output/Prediction_Results/pred_ms_sr_wt_0.2.RData")
+
+
+## Simrank + BNN
+# ZScore_ms_sr_bnn_20<- ZScore_Mat(ms_sr, ms_sr_bnn_20, MS_train, MS_test)
+# save(pred_ms_sr_bnn_20, "../output/Prediction_Results/pred_ms_sr_bnn_20.RData")
+# ZScore_ms_sr_bnn_40<- ZScore_Mat(ms_sr, ms_sr_bnn_40, MS_train, MS_test)
+# save(pred_ms_sr_bnn_40, "../output/Prediction_Results/pred_ms_sr_bnn_40.RData")
+
+
+## Simrank + combine
+# pred_ms_sr_combine_0.05_40 <- avg_dev_pred(MS_train,MS_test, ms_sr, ms_sr_combine_0.05_40)
+# save(pred_ms_sr_combine_0.05_40, "../output/Prediction_Results/pred_ms_sr_combine_0.05_40.RData")
+
+
+
+## Implementation on Dataset 2
+
+## MSD + WT
+# pred_movie_msd_wt_0.05 <- avg_dev_pred(movie_train,movie_test,movie_msd, movie_msd_wt_0.05)
+# save(pred_movie_msd_wt_0.05, "../output/Prediction_Results/pred_movie_msd_wt_0.05.RData")
+# pred_movie_msd_wt_0.2 <- avg_dev_pred(movie_train,movie_test,movie_msd, movie_msd_wt_0.2)
+# save(pred_movie_msd_wt_0.2, "../output/Prediction_Results/pred_movie_msd_wt_0.2.RData")
+
+## MSD + BNN
+# ZScore_movie_msd_bnn_20<- ZScore_Mat(movie_msd, movie_msd_bnn_20, movie_train, movie_test)
+# save(ZScore_movie_msd_bnn_20, "../output/Prediction_Results/ZScore_movie_msd_bnn_20.RData")
+# ZScore_movie_msd_bnn_40<- ZScore_Mat(movie_msd, movie_msd_bnn_40, movie_train, movie_test)
+# save(ZScore_movie_msd_bnn_40, "../output/Prediction_Results/ZScore_movie_msd_bnn_40.RData")
+
+
+## MSD + combine
+# pred_movie_msd_combine_0.05_40 <- avg_dev_pred(movie_train,movie_test,movie_msd, movie_msd_combine_0.05_40)
+# save(pred_movie_msd_combine_0.05_40, "../output/Prediction_Results/pred_movie_msd_combine_0.05_40.RData")
+
+## PC + WT
+# pred_movie_pc_wt_0.05 <- avg_dev_pred(movie_train,movie_test,movie_pc, movie_pc_wt_0.05)
+# save(pred_movie_pc_wt_0.05, "../output/Prediction_Results/pred_movie_pc_wt_0.05.RData")
+# pred_movie_pc_wt_0.2 <- avg_dev_pred(movie_train,movie_test,movie_pc, movie_pc_wt_0.2)
+# save(pred_movie_pc_wt_0.2, "../output/Prediction_Results/pred_movie_pc_wt_0.2.RData")
+
+## PC + BNN
+# ZScore_movie_pc_bnn_20 <- ZScore_Mat(movie_pc, movie_pc_bnn_20, movie_train, movie_test)
+# save(ZScore_movie_pc_bnn_20, "../output/Prediction_Results/ZScore_movie_pc_bnn_20.RData")
+# ZScore_movie_pc_bnn_40 <- ZScore_Mat(movie_pc, movie_pc_bnn_40, movie_train, movie_test)
+# save(ZScore_movie_pc_bnn_40, "../output/Prediction_Results/ZScore_movie_pc_bnn_40.RData")
 
 # PC + combine
-# pred_ms_pc_combine <- avg_dev_pred(MS_train,MS_test,ms_pc, ms_pc_combine)
+# pred_movie_pc_combine_0.05_40 <- avg_dev_pred(movie_train,movie_test,movie_pc, movie_pc_combine_0.05_40)
+# save(pred_movie_pc_combine_0.05_40, "../output/Prediction_Results/pred_movie_pc_combine_0.05_40.RData")
 
-# Simrank + WT
-# pred_ms_sr_wt <- avg_dev_pred(MS_train,MS_test,ms_sr, ms_sr_wt)
-
-# Simrank + BNN
-# ZScore_ms_sr_bnn<- ZScore_Mat(ms_sr, ms_sr_bnn, MS_train, MS_test)
-
-# Simrank + combine
-# pred_ms_sr_combine <- avg_dev_pred(MS_train,MS_test, ms_sr, ms_sr_combine)
-
-
-
-# Implementation on Dataset 2
-
-# MSD + WT
-# pred_movie_msd_wt <- avg_dev_pred(movie_train,movie_test,movie_msd, movie_msd_wt)
-
-# MSD + BNN
-# ZScore_movie_msd_bnn<- ZScore_Mat(movie_msd, movie_msd_bnn, movie_train, movie_test)
-
-# MSD + combine
-# pred_movie_msd_combine <- avg_dev_pred(movie_train,movie_test,movie_msd, movie_msd_combine)
-
-
-# PC + WT
-# pred_movie_pc_wt <- avg_dev_pred(movie_train,movie_test,movie_pc, movie_pc_wt)
-
-# PC + BNN
-# ZScore_movie_pc_bnn<- ZScore_Mat(movie_pc, movie_pc_bnn, movie_train, movie_test)
-
-# PC + combine
-# pred_movie_pc_combine <- avg_dev_pred(movie_train,movie_test,movie_pc, movie_pc_combine)
 ```
 
 ## Step 6 : Valuation
 ```{r}
-# Implementation on Dataset 1: ranked scoring
+## Implementation on Dataset 1: ranked scoring
 
-# MSD + WT
-# ms_msd_wt_RS <- Rank_Score(pred_ms_msd_wt, MS_test)
-# save(ms_msd_wt_RS, file = "../output/ms_msd_wt_RS.RData")
+## MSD + WT
+# load("../output/Prediction_Results/pred_ms_msd_wt_0.05.RData")
+# RS_ms_msd_wt_0.05 <- Rank_Score(pred_ms_msd_wt_0.05, MS_test)
+# RS_ms_msd_wt_0.05
+# load("../output/Prediction_Results/pred_ms_msd_wt_0.2.RData")
+# RS_ms_msd_wt_0.2 <- Rank_Score(pred_ms_msd_wt_0.2, MS_test)
+# RS_ms_msd_wt_0.2
 
-# MSD + BNN
-# ms_msd_bnn_RS <- Rank_Score(ZScore_ms_msd_bnn, MS_test)
-# save(ms_msd_bnn_RS, file = "../output/ms_msd_bnn_RS.RData")
+## MSD + BNN
+# load("../output/Prediction_Results/ZScore_ms_msd_bnn_20.RData")
+# RS_ms_msd_bnn_20 <- Rank_Score(ZScore_ms_msd_bnn_20, MS_test)
+# RS_ms_msd_bnn_20
+# load("../output/Prediction_Results/ZScore_ms_msd_bnn_40.RData")
+# RS_ms_msd_bnn_40 <- Rank_Score(ZScore_ms_msd_bnn_40, MS_test)
+# RS_ms_msd_bnn_40
 
-
-# MSD + combine
-# ms_msd_combine_RS <- Rank_Score(pred_ms_msd_combine, MS_test)
-# save(ms_msd_combine_RS, file = "../output/ms_msd_combine_RS.RData")
-
-
-
-# PC + WT
-# ms_pc_wt_RS <- Rank_Score(pred_ms_pc_wt, MS_test)
-# save(ms_pc_wt_RS, file = "../output/ms_pc_wt_RS.RData")
-
-
-# PC + BNN
-# ms_pc_bnn_RS <- Rank_Score(ZScore_ms_pc_bnn, MS_test)
-# save(ms_pc_bnn_RS, file = "../output/ms_pc_bnn_RS.RData")
-
-# PC + combine
-# ms_pc_combine_RS <- Rank_Score(pred_ms_pc_combine, MS_test)
-# save(ms_pc_combine_RS, file = "../output/ms_pc_combine_RS.RData")
-
-# Simrank + WT
-# ms_sr_wt_RS <- Rank_Score(pred_ms_sr_wt, MS_test)
-# save(ms_sr_wt_RS, file = "../output/ms_sr_wt_RS.RData")
-
-# Simrank + BNN
-# ms_sr_bnn_RS <- Rank_Score(ZScore_ms_sr_bnn, MS_test)
-# save(ms_sr_bnn_RS, file = "../output/ms_sr_bnn_RS.RData")
-
-# Simrank + combine
-# ms_sr_combine_RS <- Rank_Score(pred_ms_sr_combine, MS_test)
-# save(ms_sr_combine_RS, file = "../output/ms_sr_combine_RS.RData")
+## MSD + combine
+# load("../output/Prediction_Results/ZScore_ms_msd_combine_0.05_40.RData")
+# RS_ms_msd_combine_0.05_40 <- Rank_Score(pred_ms_msd_combine_0.05_40, MS_test)
+# RS_ms_msd_combine_0.05_40
 
 
-# Implementation on Dataset 2: MAE
-
-# MSD + WT
-# movie_msd_wt_MAE <- MAE(pred_movie_msd_wt, movie_test)
-# save(movie_msd_wt_MAE, file = "../output/movie_msd_wt_MAE.RData")
-
-
-# MSD + BNN
-# movie_msd_bnn_MAE <- MAE(ZScore_movie_msd_bnn, movie_test)
-# save(movie_msd_bnn_MAE, file = "../output/movie_msd_bnn_MAE.RData")
-
-# MSD + combine
-# movie_msd_combine_MAE <- MAE(pred_movie_msd_combine, movie_test)
-# save(movie_msd_combine_MAE, file = "../output/movie_msd_combine_MAE.RData")
+## PC + WT
+# load("../output/Prediction_Results/pred_ms_pc_wt_0.05.RData")
+# RS_ms_pc_wt_0.05 <- Rank_Score(pred_ms_pc_wt_0.05, MS_test)
+# RS_ms_pc_wt_0.05
+# load("../output/Prediction_Results/pred_ms_pc_wt_0.2.RData")
+# RS_ms_pc_wt_0.2 <- Rank_Score(pred_ms_pc_wt_0.2, MS_test)
+# RS_ms_pc_wt_0.2
 
 
+## PC + BNN
+# load("../output/Prediction_Results/ZScore_ms_pc_bnn_20.RData")
+# RS_ms_pc_bnn_20 <- Rank_Score(ZScore_ms_pc_bnn_20, MS_test)
+# RS_ms_pc_bnn_20
+# load("../output/Prediction_Results/ZScore_ms_pc_bnn_40.RData")
+# RS_ms_pc_bnn_40 <- Rank_Score(ZScore_ms_pc_bnn_40, MS_test)
+# RS_ms_pc_bnn_40
 
-# PC + WT
-# movie_pc_wt_MAE <- MAE(pred_movie_pc_wt, movie_test)
-# save(movie_pc_wt_MAE, file = "../output/movie_pc_wt_MAE.RData")
+## PC + combine
+# load("../output/Prediction_Results/pred_ms_pc_combine_0.05_40.RData")
+# RS_ms_pc_combine_0.05_40 <- Rank_Score(pred_ms_pc_combine_0.05_40, MS_test)
+# RS_ms_pc_combine_0.05_40
 
-# PC + BNN
-# movie_msd_pc_MAE <- MAE(ZScore_movie_pc_bnn, movie_test)
-# save(movie_msd_pc_MAE, file = "../output/movie_msd_pc_MAE.RData")
+## Simrank + WT
+# load("../output/Prediction_Results/pred_ms_sr_wt_0.05.RData")
+# SR_ms_sr_wt_0.05 <- Rank_Score(pred_ms_sr_wt_0.05, MS_test)
+# SR_ms_sr_wt_0.05
+# load("../output/Prediction_Results/pred_ms_sr_wt_0.2.RData")
+# SR_ms_sr_wt_0.2 <- Rank_Score(pred_ms_sr_wt_0.2, MS_test)
+# SR_ms_sr_wt_0.2
 
-# PC + combine
-# movie_pc_combine_MAE <- MAE(pred_movie_pc_combine, movie_test)
-# save(movie_pc_combine_MAE, file = "../output/movie_pc_combine_MAE.RData")
+## Simrank + BNN
+# load("../output/Prediction_Results/ZScore_ms_sr_bnn_20.RData")
+# RS_ms_sr_bnn_20 <- Rank_Score(ZScore_ms_sr_bnn_20, MS_test)
+# RS_ms_sr_bnn_20
+# load("../output/Prediction_Results/ZScore_ms_sr_bnn_40.RData")
+# RS_ms_sr_bnn_40 <- Rank_Score(ZScore_ms_sr_bnn_40, MS_test)
+# RS_ms_sr_bnn_40
+
+
+## Simrank + combine
+# load("../output/Prediction_Results/pred_ms_sr_combine_0.05_40.RData")
+# RS_ms_sr_combine_0.05_40 <- Rank_Score(pred_ms_sr_combine_0.05_40, MS_test)
+# RS_ms_sr_combine_0.05_40
+
+
+
+### Implementation on Dataset 2: MAE
+
+## MSD + WT
+# load("../output/Prediction_Results/pred_movie_msd_0.05.RData")
+# MAE_movie_msd_wt_0.05 <- MAE(pred_movie_msd_wt_0.05, movie_test)
+# MAE_movie_msd_wt_0.05
+# load("../output/Prediction_Results/pred_movie_msd_0.2.RData")
+# MAE_movie_msd_wt_0.2 <- MAE(pred_movie_msd_wt_0.2, movie_test)
+# MAE_movie_msd_wt_0.2
+
+
+## MSD + BNN
+# load("../output/Prediction_Results/ZScore_movie_msd_bnn_20.RData")
+# MAE_movie_msd_bnn_20 <- MAE(ZScore_movie_msd_bnn_20, movie_test)
+# MAE_movie_msd_bnn_20
+# load("../output/Prediction_Results/ZScore_movie_msd_bnn_40.RData")
+# MAE_movie_msd_bnn_40 <- MAE(ZScore_movie_msd_bnn_40, movie_test)
+# MAE_movie_msd_bnn_40
+
+
+## MSD + combine
+# load("../output/Prediction_Results/pred_movie_msd_combine_0.05_40.RData")
+# MAE_movie_msd_combine_0.05_40 <- MAE(pred_movie_msd_combine_0.05_40, movie_test)
+# MAE_movie_msd_combine_0.05_40
+
+
+## PC + WT
+# load("../output/Prediction_Results/pred_movie_pc_wt_0.05.RData")
+# MAE_movie_pc_wt_0.05 <- MAE(pred_movie_pc_wt_0.05, movie_test)
+# MAE_movie_pc_wt_0.05
+# load("../output/Prediction_Results/pred_movie_pc_wt_0.2.RData")
+# MAE_movie_pc_wt_0.2 <- MAE(pred_movie_pc_wt_0.2, movie_test)
+# MAE_movie_pc_wt_0.2
+
+## PC + BNN
+# load("../output/Prediction_Results/ZScore_movie_pc_bnn_20.RData")
+# MAE_movie_pc_bnn_20 <- MAE(ZScore_movie_pc_bnn_20, movie_test)
+# MAE_movie_pc_bnn_20
+# load("../output/Prediction_Results/ZScore_movie_pc_bnn_40.RData")
+# MAE_movie_pc_bnn_40 <- MAE(ZScore_movie_pc_bnn_40, movie_test)
+# MAE_movie_pc_bnn_40
+
+## PC + combine
+# load("../output/Prediction_Results/pred_movie_pc_combine_0.05_40.RData")
+# MAE_movie_pc_combine_0.05_40 <- MAE(pred_movie_pc_combine_0.05_40, movie_test)
+# MAE_movie_pc_combine_0.05_40
 ```
 
 
@@ -533,3 +646,25 @@ error_em<- MAE(estimate,test)
 error_em
 ```
 
+
+## Compare results
+```{r result}
+load("../output/results.RData")
+##Data 1
+library("kableExtra")
+dt1 <- aa[[1]]
+kable(dt1, "html") %>%
+  kable_styling(c("striped", "bordered")) %>%
+  add_header_above(c(" ", "Weight Threshold" = 2, "Best N Estimator" = 2, "Combined" = 1)) %>%
+  add_header_above(c("Dataset 1: Ranked Scoring" = 6))
+
+##Data 2
+dt2 <- aa[[2]]
+kable(dt2, "html") %>%
+  kable_styling(c("striped", "bordered")) %>%
+  add_header_above(c(" ", "Weight Threshold" = 2, "Best N Estimator" = 2, "Combined" = 1)) %>%
+  add_header_above(c("Dataset 2: MAE" = 6))
+
+##Cluster mae
+cat("Cluster Model MAE =", error_em)
+```

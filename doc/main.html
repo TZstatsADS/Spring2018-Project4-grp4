@@ -127,9 +127,10 @@ $(document).ready(function () {
 
 <div id="step-0-load-the-packages" class="section level2">
 <h2>Step 0: Load the packages</h2>
-<pre class="r"><code>#if (!require(&quot;&quot;)) install.packages(&quot;&quot;)
-
-#default the wd to the fold this rmd file exists</code></pre>
+<pre class="r"><code>if (!require(&quot;kableExtra&quot;)) install.packages(&quot;kableExtra&quot;)</code></pre>
+<pre><code>## Loading required package: kableExtra</code></pre>
+<pre><code>## Warning: package 'kableExtra' was built under R version 3.4.4</code></pre>
+<pre class="r"><code>#default the wd to the fold this rmd file exists</code></pre>
 </div>
 <div id="step-1-load-and-process-the-data" class="section level2">
 <h2>Step 1: Load and process the data</h2>
@@ -163,234 +164,346 @@ load(&quot;../output/MS_test.RData&quot;)
 load(&quot;../output/movie_train.RData&quot;)
 load(&quot;../output/movie_test.RData&quot;)
 
-#For dataset 1 (MS)
+##For dataset 1 (MS)
 
-#Pearson Correlation
-#ms_pc &lt;- pearson_corr(MS_train)
-#save(ms_pc, file = &quot;ms_pc.RData&quot;)
+##Pearson Correlation
+# ms_pc &lt;- pearson_corr(MS_train)
+# save(ms_pc, file = &quot;../out/put/ms_pc.RData&quot;)
 
-#Mean-square-difference
-#ms_msd &lt;- MSD_Weight(MS_train)
-#save(ms_msd, file = &quot;../output/ms_msd.RData&quot;)
+##Mean-square-difference
+# ms_msd &lt;- MSD_Weight(MS_train)
+# save(ms_msd, file = &quot;../output/ms_msd.RData&quot;)
 
-#SimRank
-#ms_sr &lt;- simrank(MS_train)
-#save(ms_sr, file = &quot;../output/simrank_MS_train.RData&quot;)
+##SimRank
+# ms_sr &lt;- simrank(MS_train)
+# save(ms_sr, file = &quot;../output/simrank_MS_train.RData&quot;)
 
 
-#For dataset 2 (Movie)
+##For dataset 2 (Movie)
 
-#Pearson Correlation
-#movie_pc &lt;- pearson_corr(movie_train)
-#save(movie_pc, file = &quot;movie_pc.RData&quot;)
+##Pearson Correlation
+# movie_pc &lt;- pearson_corr(movie_train)
+# save(movie_pc, file = &quot;../output/movie_pc.RData&quot;)
 
-#Mean-square-difference
-#movie_msd &lt;- MSD_Weight(movie_train)
-#save(movie_msd, file = &quot;../output/movie_msd.RData&quot;)</code></pre>
+##Mean-square-difference
+# movie_msd &lt;- MSD_Weight(movie_train)
+# save(movie_msd, file = &quot;../output/movie_msd.RData&quot;)</code></pre>
 </div>
 <div id="no-variance-weighting" class="section level2">
 <h2>No Variance Weighting</h2>
 </div>
 <div id="step-4-selecting-neighbors" class="section level2">
 <h2>Step 4: Selecting Neighbors</h2>
-<pre class="r"><code># Implementation on Dataset 1
+<pre class="r"><code>## Implementation on Dataset 1
 
-# MSD + WT
-# ms_msd_wt &lt;- corr_thresh(ms_msd, 0.5)
-# save(ms_msd_wt, file = &quot;../output/ms_msd_wt.RData&quot;)
-
-
-# MSD + BNN
-# ms_msd_bnn &lt;- Select_BNN(ms_msd, 20)
-# save(ms_msd_bnn, file = &quot;../output/ms_msd_bnn.RData&quot;)
-
-# MSD + combine
-# ms_msd_combine &lt;- corr_thresh(ms_msd, 0.5)
-# save(ms_msd_combine, file = &quot;../output/ms_msd_combine.RData&quot;)
+## MSD + WT
+# ms_msd_wt_0.05 &lt;- corr_thresh(ms_msd, 0.05)
+# save(ms_msd_wt_0.05, file = &quot;../output/Selecting_Neighbors_Results/ms_msd_wt_0.05.RData&quot;)
+# ms_msd_wt_0.2 &lt;- corr_thresh(ms_msd, 0.2)
+# save(ms_msd_wt_0.2, file = &quot;../output/Selecting_Neighbors_Results/ms_msd_wt_0.2.RData&quot;)
 
 
-# PC + WT
-# ms_pc_wt &lt;- corr_thresh(ms_pc, 0.5)
-# save(ms_pc_wt, file = &quot;../output/ms_pc_wt.RData&quot;)
+## MSD + BNN
+# ms_msd_bnn_20 &lt;- Select_BNN(ms_msd, 20)
+# save(ms_msd_bnn_20, file = &quot;../output/Selecting_Neighbors_Results/ms_msd_bnn_20.RData&quot;)
+# ms_msd_bnn_40 &lt;- Select_BNN(ms_msd, 40)
+# save(ms_msd_bnn_40, file = &quot;../output/Selecting_Neighbors_Results/ms_msd_bnn_40.RData&quot;)
 
-# PC + BNN
-# ms_pc_bnn &lt;- Select_BNN(ms_pc, 20)
-# save(ms_pc_bnn, file = &quot;../output/ms_pc_bnn.RData&quot;)
+
+## MSD + combine
+# ms_msd_combine_0.05_40 &lt;- combine(ms_msd, 0.05,40)
+# save(ms_msd_combine, file = &quot;../output/Selecting_Neighbors_Results/ms_msd_combine_0.05_40.RData&quot;)
+
+## PC + WT
+# ms_pc_wt_0.05 &lt;- corr_thresh(ms_pc, 0.05)
+# save(ms_pc_wt_0.05, file = &quot;../output/Selecting_Neighbors_Results/ms_pc_wt_0.05.RData&quot;)
+# ms_pc_wt_0.2 &lt;- corr_thresh(ms_pc, 0.2)
+# save(ms_pc_wt_0.2, file = &quot;../output/Selecting_Neighbors_Results/ms_pc_wt_0.2.RData&quot;)
+
+
+## PC + BNN
+# ms_pc_bnn_20 &lt;- Select_BNN(ms_pc, 20)
+# save(ms_pc_bnn_20, file = &quot;../output/Selecting_Neighbors_Results/ms_pc_bnn_20.RData&quot;)
+# ms_pc_bnn_40 &lt;- Select_BNN(ms_pc, 40)
+# save(ms_pc_bnn_40, file = &quot;../output/Selecting_Neighbors_Results/ms_pc_bnn_40.RData&quot;)
+
+
+## PC + combine
+# ms_pc_combine_0.05_40 &lt;- combine(ms_pc, 0.005, 40)
+# save(ms_pc_combine_0.05_40, file = &quot;../output/Selecting_Neighbors_Results/ms_pc_combine_0.05_40.RData&quot;)
+
+## Simrank + WT
+# ms_sr_wt_0.05 &lt;- corr_thresh(ms_sr, 0.05)
+# save(ms_sr_wt_0.05, file = &quot;../output/Selecting_Neighbors_Results/ms_pc_wt_0.05.RData&quot;)
+# ms_sr_wt_0.2 &lt;- corr_thresh(ms_sr, 0.2)
+# save(ms_sr_wt_0.2, file = &quot;../output/Selecting_Neighbors_Results/ms_pc_wt_0.2.RData&quot;)
+
+
+## Simrank + BNN
+# ms_sr_bnn_20 &lt;- Select_BNN(ms_sr, 20)
+# save(ms_sr_bnn_20, file = &quot;../output/Selecting_Neighbors_Results/ms_sr_bnn_20.RData&quot;)
+# ms_sr_bnn_40 &lt;- Select_BNN(ms_sr, 40)
+# save(ms_sr_bnn_40, file = &quot;../output/Selecting_Neighbors_Results/ms_sr_bnn_40.RData&quot;)
+
+
+## Simrank + combine
+# ms_sr_combine_0.05_40 &lt;- combine(ms_sr, 0.005, 40)
+# save(ms_sr_combine_0.05_40, file = &quot;../output/Selecting_Neighbors_Results/ms_sr_combine_0.05_40.RData&quot;)
+
+
+
+## Implementation on Dataset 2
+
+## MSD + WT
+# movie_msd_wt_0.05 &lt;- corr_thresh(movie_msd, 0.05)
+# save(movie_msd_wt_0.05, file = &quot;../output/Selecting_Neighbors_Results/movie_msd_wt_0.05.RData&quot;)
+# movie_msd_wt_0.2 &lt;- corr_thresh(movie_msd, 0.2)
+# save(movie_msd_wt_0.2, file = &quot;../output/Selecting_Neighbors_Results/movie_msd_wt_0.2.RData&quot;)
+
+
+## MSD + BNN
+# movie_msd_bnn_20 &lt;- Select_BNN(movie_msd, 20)
+# save(movie_msd_bnn_20, file = &quot;../output/Selecting_Neighbors_Results/movie_msd_bnn_20.RData&quot;)
+# movie_msd_bnn_40 &lt;- Select_BNN(movie_msd, 40)
+# save(movie_msd_bnn_40, file = &quot;../output/Selecting_Neighbors_Results/movie_msd_bnn_40.RData&quot;)
+
+
+## MSD + combine
+# movie_msd_combine_0.05_40 &lt;- combine(movie_msd, 0.005, 40)
+# save(movie_msd_combine_0.05_40, file = &quot;../output/Selecting_Neighbors_Results/movie_msd_combine_0.05_40.RData&quot;)
+
+
+## PC + WT
+# movie_pc_wt_0.05 &lt;- corr_thresh(movie_pc, 0.05)
+# save(movie_pc_wt_0.05, file = &quot;../outputSelecting_Neighbors_Results//movie_pc_wt_0.05.RData&quot;)
+# movie_pc_wt_0.2 &lt;- corr_thresh(movie_pc, 0.2)
+# save(movie_pc_wt_0.2, file = &quot;../outputSelecting_Neighbors_Results//movie_pc_wt_0.2.RData&quot;)
+
+
+## PC + BNN
+# movie_pc_bnn_20 &lt;- Select_BNN(movie_pc, 20)
+# save(movie_pc_bnn_20, file = &quot;../output/Selecting_Neighbors_Results/movie_pc_bnn_20.RData&quot;)
+# movie_pc_bnn_40 &lt;- Select_BNN(movie_pc, 40)
+# save(movie_pc_bnn_40, file = &quot;../output/Selecting_Neighbors_Results/movie_pc_bnn_40.RData&quot;)
+
 
 # PC + combine
-# ms_pc_combine &lt;- combine(ms_pc, 0.005, 20)
-# save(ms_pc_combine, file = &quot;../output/ms_pc_combine.RData&quot;)
-
-# Simrank + WT
-# ms_sr_wt &lt;- corr_thresh(ms_sr, 0.5)
-# save(ms_sr_wt, file = &quot;../output/ms_pc_wt.RData&quot;)
-
-# Simrank + BNN
-# ms_sr_bnn &lt;- Select_BNN(ms_sr, 20)
-# save(ms_sr_bnn, file = &quot;../output/ms_sr_bnn.RData&quot;)
-
-# Simrank + combine
-# ms_sr_combine &lt;- combine(ms_sr, 0.005, 20)
-# save(ms_sr_combine, file = &quot;../output/ms_sr_combine.RData&quot;)
-
-
-
-# Implementation on Dataset 2
-
-# MSD + WT
-# movie_msd_wt &lt;- corr_thresh(movie_msd, 0.5)
-# save(movie_msd_wt, file = &quot;../output/movie_msd_wt.RData&quot;)
-
-
-# MSD + BNN
-# movie_msd_bnn &lt;- Select_BNN(movie_msd, 20)
-# save(movie_msd_bnn, file = &quot;../output/movie_msd_bnn.RData&quot;)
-
-# MSD + combine
-# movie_msd_combine &lt;- combine(movie_msd, 0.005, 20)
-# save(movie_msd_combine, file = &quot;../output/movie_msd_combine.RData&quot;)
-
-
-# PC + WT
-# movie_pc_wt &lt;- corr_thresh(movie_pc, 0.5)
-# save(movie_pc_wt, file = &quot;../output/movie_pc_wt.RData&quot;)
-
-# PC + BNN
-# movie_pc_bnn &lt;- corr_thresh(movie_pc, 0.5)
-# save(movie_pc_bnn, file = &quot;../output/movie_pc_bnn.RData&quot;)
-
-# PC + combine
-# movie_pc_combine &lt;- combine(movie_pc, 0.005, 20)
-# save(movie_pc_combine, file = &quot;../output/movie_pc_combine.RData&quot;)</code></pre>
+# movie_pc_combine_0.05_40 &lt;- combine(movie_pc, 0.005, 40)
+# save(movie_pc_combine_0.05_40, file = &quot;../output/Selecting_Neighbors_Results/movie_pc_combine_0.05_40.RData&quot;)</code></pre>
 </div>
 <div id="step-5-prediction" class="section level2">
 <h2>Step 5 : Prediction</h2>
-<pre class="r"><code># Implementation on Dataset 1
+<pre class="r"><code>## Implementation on Dataset 1
 
-# MSD + WT
-# pred_ms_msd_wt &lt;- avg_dev_pred(MS_train,MS_test,ms_msd, ms_msd_wt)
+## MSD + WT
+# pred_ms_msd_wt_0.05 &lt;- avg_dev_pred(MS_train,MS_test,ms_msd, ms_msd_wt_0.05)
+# save(pred_ms_msd_wt_0.05, &quot;../output/Prediction_Results/pred_ms_msd_wt_0.05.RData&quot;)
+# pred_ms_msd_wt_0.2 &lt;- avg_dev_pred(MS_train,MS_test,ms_msd, ms_msd_wt_0.2)
+# save(pred_ms_msd_wt_0.2, &quot;../output/Prediction_Results/pred_ms_msd_wt_0.2.RData&quot;)
 
-# MSD + BNN
-# ZScore_ms_msd_bnn&lt;- ZScore_Mat(ms_msd, ms_msd_bnn, MS_train, MS_test)
+## MSD + BNN
+# ZScore_ms_msd_bnn_20 &lt;- ZScore_Mat(ms_msd, ms_msd_bnn_20, MS_train, MS_test)
+# save(ZScore_ms_msd_bnn_20, &quot;../output/Prediction_Results/ZScore_ms_msd_bnn_20.RData&quot;)
+# ZScore_ms_msd_bnn_40 &lt;- ZScore_Mat(ms_msd, ms_msd_bnn_40, MS_train, MS_test)
+# save(ZScore_ms_msd_bnn_40, &quot;../output/Prediction_Results/ZScore_ms_msd_bnn_40.RData&quot;)
 
-# MSD + combine
-# pred_ms_msd_combine &lt;- avg_dev_pred(MS_train,MS_test,ms_msd, ms_msd_combine)
+
+## MSD + combine
+# pred_ms_msd_combine_0.05_40 &lt;- avg_dev_pred(MS_train,MS_test,ms_msd, ms_msd_combine_0.05_40)
+# save(pred_ms_msd_combine_0.05_40, &quot;../output/Prediction_Results/pred_ms_msd_combine_0.05_40.RData&quot;)
 
 
-# PC + WT
-# pred_ms_pc_wt &lt;- avg_dev_pred(MS_train,MS_test,ms_pc, ms_pc_wt)
+## PC + WT
+# pred_ms_pc_wt_0.05 &lt;- avg_dev_pred(MS_train,MS_test,ms_pc, ms_pc_wt_0,05)
+# save(pred_ms_pc_wt_0.05, &quot;../output/Prediction_Results/pred_ms_pc_wt_0.05.RData&quot;)
+# pred_ms_pc_wt_0.2 &lt;- avg_dev_pred(MS_train,MS_test,ms_pc, ms_pc_wt_0,2)
+# save(pred_ms_pc_wt_0.2, &quot;../output/Prediction_Results/pred_ms_pc_wt_0.2.RData&quot;)
 
-# PC + BNN
-# ZScore_ms_pc_bnn&lt;- ZScore_Mat(ms_pc, ms_pc_bnn, MS_train, MS_test)
+## PC + BNN
+# ZScore_ms_pc_bnn_20 &lt;- ZScore_Mat(ms_pc, ms_pc_bnn_20, MS_train, MS_test)
+# save(ZScore_ms_pc_bnn_20, &quot;../output/Prediction_Results/ZScore_ms_pc_bnn_20.RData&quot;)
+# ZScore_ms_pc_bnn_40 &lt;- ZScore_Mat(ms_pc, ms_pc_bnn_40, MS_train, MS_test)
+# save(ZScore_ms_pc_bnn_40, &quot;../output/Prediction_Results/ZScore_ms_pc_bnn_40.RData&quot;)
+
+
+## PC + combine
+# pred_ms_pc_combine_0.05_40 &lt;- avg_dev_pred(MS_train,MS_test,ms_pc, ms_pc_combine_0.05_40)
+# save(pred_ms_pc_combine_0.05_40, &quot;../output/Prediction_Results/pred_ms_pc_combine_0.05_40.RData&quot;)
+
+
+## Simrank + WT
+# pred_ms_sr_wt_0.05 &lt;- avg_dev_pred(MS_train,MS_test,ms_sr, ms_sr_wt_0.05)
+# save(pred_ms_sr_wt_0.05, &quot;../output/Prediction_Results/pred_ms_sr_wt_0.05.RData&quot;)
+# pred_ms_sr_wt_0.2 &lt;- avg_dev_pred(MS_train,MS_test,ms_sr, ms_sr_wt_0.2)
+# save(pred_ms_sr_wt_0.2, &quot;../output/Prediction_Results/pred_ms_sr_wt_0.2.RData&quot;)
+
+
+## Simrank + BNN
+# ZScore_ms_sr_bnn_20&lt;- ZScore_Mat(ms_sr, ms_sr_bnn_20, MS_train, MS_test)
+# save(pred_ms_sr_bnn_20, &quot;../output/Prediction_Results/pred_ms_sr_bnn_20.RData&quot;)
+# ZScore_ms_sr_bnn_40&lt;- ZScore_Mat(ms_sr, ms_sr_bnn_40, MS_train, MS_test)
+# save(pred_ms_sr_bnn_40, &quot;../output/Prediction_Results/pred_ms_sr_bnn_40.RData&quot;)
+
+
+## Simrank + combine
+# pred_ms_sr_combine_0.05_40 &lt;- avg_dev_pred(MS_train,MS_test, ms_sr, ms_sr_combine_0.05_40)
+# save(pred_ms_sr_combine_0.05_40, &quot;../output/Prediction_Results/pred_ms_sr_combine_0.05_40.RData&quot;)
+
+
+
+## Implementation on Dataset 2
+
+## MSD + WT
+# pred_movie_msd_wt_0.05 &lt;- avg_dev_pred(movie_train,movie_test,movie_msd, movie_msd_wt_0.05)
+# save(pred_movie_msd_wt_0.05, &quot;../output/Prediction_Results/pred_movie_msd_wt_0.05.RData&quot;)
+# pred_movie_msd_wt_0.2 &lt;- avg_dev_pred(movie_train,movie_test,movie_msd, movie_msd_wt_0.2)
+# save(pred_movie_msd_wt_0.2, &quot;../output/Prediction_Results/pred_movie_msd_wt_0.2.RData&quot;)
+
+## MSD + BNN
+# ZScore_movie_msd_bnn_20&lt;- ZScore_Mat(movie_msd, movie_msd_bnn_20, movie_train, movie_test)
+# save(ZScore_movie_msd_bnn_20, &quot;../output/Prediction_Results/ZScore_movie_msd_bnn_20.RData&quot;)
+# ZScore_movie_msd_bnn_40&lt;- ZScore_Mat(movie_msd, movie_msd_bnn_40, movie_train, movie_test)
+# save(ZScore_movie_msd_bnn_40, &quot;../output/Prediction_Results/ZScore_movie_msd_bnn_40.RData&quot;)
+
+
+## MSD + combine
+# pred_movie_msd_combine_0.05_40 &lt;- avg_dev_pred(movie_train,movie_test,movie_msd, movie_msd_combine_0.05_40)
+# save(pred_movie_msd_combine_0.05_40, &quot;../output/Prediction_Results/pred_movie_msd_combine_0.05_40.RData&quot;)
+
+## PC + WT
+# pred_movie_pc_wt_0.05 &lt;- avg_dev_pred(movie_train,movie_test,movie_pc, movie_pc_wt_0.05)
+# save(pred_movie_pc_wt_0.05, &quot;../output/Prediction_Results/pred_movie_pc_wt_0.05.RData&quot;)
+# pred_movie_pc_wt_0.2 &lt;- avg_dev_pred(movie_train,movie_test,movie_pc, movie_pc_wt_0.2)
+# save(pred_movie_pc_wt_0.2, &quot;../output/Prediction_Results/pred_movie_pc_wt_0.2.RData&quot;)
+
+## PC + BNN
+# ZScore_movie_pc_bnn_20 &lt;- ZScore_Mat(movie_pc, movie_pc_bnn_20, movie_train, movie_test)
+# save(ZScore_movie_pc_bnn_20, &quot;../output/Prediction_Results/ZScore_movie_pc_bnn_20.RData&quot;)
+# ZScore_movie_pc_bnn_40 &lt;- ZScore_Mat(movie_pc, movie_pc_bnn_40, movie_train, movie_test)
+# save(ZScore_movie_pc_bnn_40, &quot;../output/Prediction_Results/ZScore_movie_pc_bnn_40.RData&quot;)
 
 # PC + combine
-# pred_ms_pc_combine &lt;- avg_dev_pred(MS_train,MS_test,ms_pc, ms_pc_combine)
-
-# Simrank + WT
-# pred_ms_sr_wt &lt;- avg_dev_pred(MS_train,MS_test,ms_sr, ms_sr_wt)
-
-# Simrank + BNN
-# ZScore_ms_sr_bnn&lt;- ZScore_Mat(ms_sr, ms_sr_bnn, MS_train, MS_test)
-
-# Simrank + combine
-# pred_ms_sr_combine &lt;- avg_dev_pred(MS_train,MS_test, ms_sr, ms_sr_combine)
-
-
-
-# Implementation on Dataset 2
-
-# MSD + WT
-# pred_movie_msd_wt &lt;- avg_dev_pred(movie_train,movie_test,movie_msd, movie_msd_wt)
-
-# MSD + BNN
-# ZScore_movie_msd_bnn&lt;- ZScore_Mat(movie_msd, movie_msd_bnn, movie_train, movie_test)
-
-# MSD + combine
-# pred_movie_msd_combine &lt;- avg_dev_pred(movie_train,movie_test,movie_msd, movie_msd_combine)
-
-
-# PC + WT
-# pred_movie_pc_wt &lt;- avg_dev_pred(movie_train,movie_test,movie_pc, movie_pc_wt)
-
-# PC + BNN
-# ZScore_movie_pc_bnn&lt;- ZScore_Mat(movie_pc, movie_pc_bnn, movie_train, movie_test)
-
-# PC + combine
-# pred_movie_pc_combine &lt;- avg_dev_pred(movie_train,movie_test,movie_pc, movie_pc_combine)</code></pre>
+# pred_movie_pc_combine_0.05_40 &lt;- avg_dev_pred(movie_train,movie_test,movie_pc, movie_pc_combine_0.05_40)
+# save(pred_movie_pc_combine_0.05_40, &quot;../output/Prediction_Results/pred_movie_pc_combine_0.05_40.RData&quot;)</code></pre>
 </div>
 <div id="step-6-valuation" class="section level2">
 <h2>Step 6 : Valuation</h2>
-<pre class="r"><code># Implementation on Dataset 1: ranked scoring
+<pre class="r"><code>## Implementation on Dataset 1: ranked scoring
 
-# MSD + WT
-# ms_msd_wt_RS &lt;- Rank_Score(pred_ms_msd_wt, MS_test)
-# save(ms_msd_wt_RS, file = &quot;../output/ms_msd_wt_RS.RData&quot;)
+## MSD + WT
+# load(&quot;../output/Prediction_Results/pred_ms_msd_wt_0.05.RData&quot;)
+# RS_ms_msd_wt_0.05 &lt;- Rank_Score(pred_ms_msd_wt_0.05, MS_test)
+# RS_ms_msd_wt_0.05
+# load(&quot;../output/Prediction_Results/pred_ms_msd_wt_0.2.RData&quot;)
+# RS_ms_msd_wt_0.2 &lt;- Rank_Score(pred_ms_msd_wt_0.2, MS_test)
+# RS_ms_msd_wt_0.2
 
-# MSD + BNN
-# ms_msd_bnn_RS &lt;- Rank_Score(ZScore_ms_msd_bnn, MS_test)
-# save(ms_msd_bnn_RS, file = &quot;../output/ms_msd_bnn_RS.RData&quot;)
+## MSD + BNN
+# load(&quot;../output/Prediction_Results/ZScore_ms_msd_bnn_20.RData&quot;)
+# RS_ms_msd_bnn_20 &lt;- Rank_Score(ZScore_ms_msd_bnn_20, MS_test)
+# RS_ms_msd_bnn_20
+# load(&quot;../output/Prediction_Results/ZScore_ms_msd_bnn_40.RData&quot;)
+# RS_ms_msd_bnn_40 &lt;- Rank_Score(ZScore_ms_msd_bnn_40, MS_test)
+# RS_ms_msd_bnn_40
 
-
-# MSD + combine
-# ms_msd_combine_RS &lt;- Rank_Score(pred_ms_msd_combine, MS_test)
-# save(ms_msd_combine_RS, file = &quot;../output/ms_msd_combine_RS.RData&quot;)
-
-
-
-# PC + WT
-# ms_pc_wt_RS &lt;- Rank_Score(pred_ms_pc_wt, MS_test)
-# save(ms_pc_wt_RS, file = &quot;../output/ms_pc_wt_RS.RData&quot;)
-
-
-# PC + BNN
-# ms_pc_bnn_RS &lt;- Rank_Score(ZScore_ms_pc_bnn, MS_test)
-# save(ms_pc_bnn_RS, file = &quot;../output/ms_pc_bnn_RS.RData&quot;)
-
-# PC + combine
-# ms_pc_combine_RS &lt;- Rank_Score(pred_ms_pc_combine, MS_test)
-# save(ms_pc_combine_RS, file = &quot;../output/ms_pc_combine_RS.RData&quot;)
-
-# Simrank + WT
-# ms_sr_wt_RS &lt;- Rank_Score(pred_ms_sr_wt, MS_test)
-# save(ms_sr_wt_RS, file = &quot;../output/ms_sr_wt_RS.RData&quot;)
-
-# Simrank + BNN
-# ms_sr_bnn_RS &lt;- Rank_Score(ZScore_ms_sr_bnn, MS_test)
-# save(ms_sr_bnn_RS, file = &quot;../output/ms_sr_bnn_RS.RData&quot;)
-
-# Simrank + combine
-# ms_sr_combine_RS &lt;- Rank_Score(pred_ms_sr_combine, MS_test)
-# save(ms_sr_combine_RS, file = &quot;../output/ms_sr_combine_RS.RData&quot;)
+## MSD + combine
+# load(&quot;../output/Prediction_Results/ZScore_ms_msd_combine_0.05_40.RData&quot;)
+# RS_ms_msd_combine_0.05_40 &lt;- Rank_Score(pred_ms_msd_combine_0.05_40, MS_test)
+# RS_ms_msd_combine_0.05_40
 
 
-# Implementation on Dataset 2: MAE
-
-# MSD + WT
-# movie_msd_wt_MAE &lt;- MAE(pred_movie_msd_wt, movie_test)
-# save(movie_msd_wt_MAE, file = &quot;../output/movie_msd_wt_MAE.RData&quot;)
-
-
-# MSD + BNN
-# movie_msd_bnn_MAE &lt;- MAE(ZScore_movie_msd_bnn, movie_test)
-# save(movie_msd_bnn_MAE, file = &quot;../output/movie_msd_bnn_MAE.RData&quot;)
-
-# MSD + combine
-# movie_msd_combine_MAE &lt;- MAE(pred_movie_msd_combine, movie_test)
-# save(movie_msd_combine_MAE, file = &quot;../output/movie_msd_combine_MAE.RData&quot;)
+## PC + WT
+# load(&quot;../output/Prediction_Results/pred_ms_pc_wt_0.05.RData&quot;)
+# RS_ms_pc_wt_0.05 &lt;- Rank_Score(pred_ms_pc_wt_0.05, MS_test)
+# RS_ms_pc_wt_0.05
+# load(&quot;../output/Prediction_Results/pred_ms_pc_wt_0.2.RData&quot;)
+# RS_ms_pc_wt_0.2 &lt;- Rank_Score(pred_ms_pc_wt_0.2, MS_test)
+# RS_ms_pc_wt_0.2
 
 
+## PC + BNN
+# load(&quot;../output/Prediction_Results/ZScore_ms_pc_bnn_20.RData&quot;)
+# RS_ms_pc_bnn_20 &lt;- Rank_Score(ZScore_ms_pc_bnn_20, MS_test)
+# RS_ms_pc_bnn_20
+# load(&quot;../output/Prediction_Results/ZScore_ms_pc_bnn_40.RData&quot;)
+# RS_ms_pc_bnn_40 &lt;- Rank_Score(ZScore_ms_pc_bnn_40, MS_test)
+# RS_ms_pc_bnn_40
 
-# PC + WT
-# movie_pc_wt_MAE &lt;- MAE(pred_movie_pc_wt, movie_test)
-# save(movie_pc_wt_MAE, file = &quot;../output/movie_pc_wt_MAE.RData&quot;)
+## PC + combine
+# load(&quot;../output/Prediction_Results/pred_ms_pc_combine_0.05_40.RData&quot;)
+# RS_ms_pc_combine_0.05_40 &lt;- Rank_Score(pred_ms_pc_combine_0.05_40, MS_test)
+# RS_ms_pc_combine_0.05_40
 
-# PC + BNN
-# movie_msd_pc_MAE &lt;- MAE(ZScore_movie_pc_bnn, movie_test)
-# save(movie_msd_pc_MAE, file = &quot;../output/movie_msd_pc_MAE.RData&quot;)
+## Simrank + WT
+# load(&quot;../output/Prediction_Results/pred_ms_sr_wt_0.05.RData&quot;)
+# SR_ms_sr_wt_0.05 &lt;- Rank_Score(pred_ms_sr_wt_0.05, MS_test)
+# SR_ms_sr_wt_0.05
+# load(&quot;../output/Prediction_Results/pred_ms_sr_wt_0.2.RData&quot;)
+# SR_ms_sr_wt_0.2 &lt;- Rank_Score(pred_ms_sr_wt_0.2, MS_test)
+# SR_ms_sr_wt_0.2
 
-# PC + combine
-# movie_pc_combine_MAE &lt;- MAE(pred_movie_pc_combine, movie_test)
-# save(movie_pc_combine_MAE, file = &quot;../output/movie_pc_combine_MAE.RData&quot;)</code></pre>
+## Simrank + BNN
+# load(&quot;../output/Prediction_Results/ZScore_ms_sr_bnn_20.RData&quot;)
+# RS_ms_sr_bnn_20 &lt;- Rank_Score(ZScore_ms_sr_bnn_20, MS_test)
+# RS_ms_sr_bnn_20
+# load(&quot;../output/Prediction_Results/ZScore_ms_sr_bnn_40.RData&quot;)
+# RS_ms_sr_bnn_40 &lt;- Rank_Score(ZScore_ms_sr_bnn_40, MS_test)
+# RS_ms_sr_bnn_40
+
+
+## Simrank + combine
+# load(&quot;../output/Prediction_Results/pred_ms_sr_combine_0.05_40.RData&quot;)
+# RS_ms_sr_combine_0.05_40 &lt;- Rank_Score(pred_ms_sr_combine_0.05_40, MS_test)
+# RS_ms_sr_combine_0.05_40
+
+
+
+### Implementation on Dataset 2: MAE
+
+## MSD + WT
+# load(&quot;../output/Prediction_Results/pred_movie_msd_0.05.RData&quot;)
+# MAE_movie_msd_wt_0.05 &lt;- MAE(pred_movie_msd_wt_0.05, movie_test)
+# MAE_movie_msd_wt_0.05
+# load(&quot;../output/Prediction_Results/pred_movie_msd_0.2.RData&quot;)
+# MAE_movie_msd_wt_0.2 &lt;- MAE(pred_movie_msd_wt_0.2, movie_test)
+# MAE_movie_msd_wt_0.2
+
+
+## MSD + BNN
+# load(&quot;../output/Prediction_Results/ZScore_movie_msd_bnn_20.RData&quot;)
+# MAE_movie_msd_bnn_20 &lt;- MAE(ZScore_movie_msd_bnn_20, movie_test)
+# MAE_movie_msd_bnn_20
+# load(&quot;../output/Prediction_Results/ZScore_movie_msd_bnn_40.RData&quot;)
+# MAE_movie_msd_bnn_40 &lt;- MAE(ZScore_movie_msd_bnn_40, movie_test)
+# MAE_movie_msd_bnn_40
+
+
+## MSD + combine
+# load(&quot;../output/Prediction_Results/pred_movie_msd_combine_0.05_40.RData&quot;)
+# MAE_movie_msd_combine_0.05_40 &lt;- MAE(pred_movie_msd_combine_0.05_40, movie_test)
+# MAE_movie_msd_combine_0.05_40
+
+
+## PC + WT
+# load(&quot;../output/Prediction_Results/pred_movie_pc_wt_0.05.RData&quot;)
+# MAE_movie_pc_wt_0.05 &lt;- MAE(pred_movie_pc_wt_0.05, movie_test)
+# MAE_movie_pc_wt_0.05
+# load(&quot;../output/Prediction_Results/pred_movie_pc_wt_0.2.RData&quot;)
+# MAE_movie_pc_wt_0.2 &lt;- MAE(pred_movie_pc_wt_0.2, movie_test)
+# MAE_movie_pc_wt_0.2
+
+## PC + BNN
+# load(&quot;../output/Prediction_Results/ZScore_movie_pc_bnn_20.RData&quot;)
+# MAE_movie_pc_bnn_20 &lt;- MAE(ZScore_movie_pc_bnn_20, movie_test)
+# MAE_movie_pc_bnn_20
+# load(&quot;../output/Prediction_Results/ZScore_movie_pc_bnn_40.RData&quot;)
+# MAE_movie_pc_bnn_40 &lt;- MAE(ZScore_movie_pc_bnn_40, movie_test)
+# MAE_movie_pc_bnn_40
+
+## PC + combine
+# load(&quot;../output/Prediction_Results/pred_movie_pc_combine_0.05_40.RData&quot;)
+# MAE_movie_pc_combine_0.05_40 &lt;- MAE(pred_movie_pc_combine_0.05_40, movie_test)
+# MAE_movie_pc_combine_0.05_40</code></pre>
 </div>
 </div>
 <div id="model-based-algorithm" class="section level1">
@@ -637,6 +750,228 @@ MAE &lt;- function(pred, true){
 error_em&lt;- MAE(estimate,test)
 error_em</code></pre>
 <pre><code>## [1] 2.803069</code></pre>
+</div>
+<div id="compare-results" class="section level2">
+<h2>Compare results</h2>
+<pre class="r"><code>load(&quot;../output/results.RData&quot;)
+##Data 1
+library(&quot;kableExtra&quot;)
+dt1 &lt;- aa[[1]]
+kable(dt1, &quot;html&quot;) %&gt;%
+  kable_styling(c(&quot;striped&quot;, &quot;bordered&quot;)) %&gt;%
+  add_header_above(c(&quot; &quot;, &quot;Weight Threshold&quot; = 2, &quot;Best N Estimator&quot; = 2, &quot;Combined&quot; = 1)) %&gt;%
+  add_header_above(c(&quot;Dataset 1: Ranked Scoring&quot; = 6))</code></pre>
+<table class="table table-striped table-bordered" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="6">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Dataset 1: Ranked Scoring
+</div>
+</th>
+</tr>
+<tr>
+<th style="border-bottom:hidden" colspan="1">
+</th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Weight Threshold
+</div>
+</th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Best N Estimator
+</div>
+</th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Combined
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+0.05
+</th>
+<th style="text-align:right;">
+0.2
+</th>
+<th style="text-align:right;">
+20
+</th>
+<th style="text-align:right;">
+40
+</th>
+<th style="text-align:right;">
+0.05+40
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Pearson Correlation
+</td>
+<td style="text-align:right;">
+45.72740
+</td>
+<td style="text-align:right;">
+44.05147
+</td>
+<td style="text-align:right;">
+32.68916
+</td>
+<td style="text-align:right;">
+34.62473
+</td>
+<td style="text-align:right;">
+33.70090
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mean Square Difference
+</td>
+<td style="text-align:right;">
+47.77998
+</td>
+<td style="text-align:right;">
+47.77998
+</td>
+<td style="text-align:right;">
+33.38771
+</td>
+<td style="text-align:right;">
+35.12559
+</td>
+<td style="text-align:right;">
+35.04042
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SimRank
+</td>
+<td style="text-align:right;">
+45.98500
+</td>
+<td style="text-align:right;">
+32.14530
+</td>
+<td style="text-align:right;">
+32.37750
+</td>
+<td style="text-align:right;">
+33.39524
+</td>
+<td style="text-align:right;">
+35.05230
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>##Data 2
+dt2 &lt;- aa[[2]]
+kable(dt2, &quot;html&quot;) %&gt;%
+  kable_styling(c(&quot;striped&quot;, &quot;bordered&quot;)) %&gt;%
+  add_header_above(c(&quot; &quot;, &quot;Weight Threshold&quot; = 2, &quot;Best N Estimator&quot; = 2, &quot;Combined&quot; = 1)) %&gt;%
+  add_header_above(c(&quot;Dataset 2: MAE&quot; = 6))</code></pre>
+<table class="table table-striped table-bordered" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="6">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Dataset 2: MAE
+</div>
+</th>
+</tr>
+<tr>
+<th style="border-bottom:hidden" colspan="1">
+</th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Weight Threshold
+</div>
+</th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Best N Estimator
+</div>
+</th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+Combined
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+0.05
+</th>
+<th style="text-align:right;">
+0.2
+</th>
+<th style="text-align:right;">
+20
+</th>
+<th style="text-align:right;">
+40
+</th>
+<th style="text-align:right;">
+0.05+40
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Pearson Correlation
+</td>
+<td style="text-align:right;">
+1.187658
+</td>
+<td style="text-align:right;">
+1.185793
+</td>
+<td style="text-align:right;">
+1.167949
+</td>
+<td style="text-align:right;">
+1.167326
+</td>
+<td style="text-align:right;">
+1.183761
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mean Square Difference
+</td>
+<td style="text-align:right;">
+1.168654
+</td>
+<td style="text-align:right;">
+1.168654
+</td>
+<td style="text-align:right;">
+1.170718
+</td>
+<td style="text-align:right;">
+1.169313
+</td>
+<td style="text-align:right;">
+1.166298
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>##Cluster mae
+cat(&quot;Cluster Model MAE =&quot;, error_em)</code></pre>
+<pre><code>## Cluster Model MAE = 2.803069</code></pre>
 </div>
 </div>
 
