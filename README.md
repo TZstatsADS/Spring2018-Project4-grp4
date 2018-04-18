@@ -16,7 +16,8 @@ Term: Spring 2018
 	+ For memory-based algorithm: We use 1) Pearson correlation, Mean-Square-Difference and SimRank with no variance weighting to settle down the weight; 2) Weight Threshold, Best-n-estimator and Combined method to select the neighbors; 3) Z-Score to make predictions; 4) Ranked-Scoring (Dataset 1) and MAE (Dataset 2) to evaluate the results.
 	+ For model-based algorithm: We use 1) EM algrithm to find gamma and mu; 2) estimate scores for movie data; 2) cross valuation to choose the best number of cluster; 3) evaluate the result with MAE.
 	+ Following are result analysis of different combinations of memory based algorithm:
-
+	
+	![image](figs/result_summary.jpg)
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members approve our work presented in this GitHub repository including this contributions statement.
 + Guo, Du: Presentaion PowerPoint, SimRank Algorithm, Refine combination of Weight Threshold and Best-n-estimator.  
