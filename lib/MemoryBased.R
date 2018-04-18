@@ -314,66 +314,6 @@ ZScore_Mat <- function(weight_mat, nbor_mat, train_data, test_data){
 }
 
 
-## Similarity Weight: SimRank for data1
-
-simrank <- function(data, c = 0.8, iter = 5){
-  #First, we construct a matrix to save the the connections of each user.
-  
-  nr <- nrow(data)
-  nc <- ncol(data)
-  
-  # Assign the weight to each user that connects to all items.
-  user_list = list()
-  for(i in 1:nr){
-    vec <- rep(0, nc)
-    vec[!is.na(data[i, ])] <- 1/sum(!is.na(data[i, ]))
-    user_list[[i]] <- vec
-  }
-  
-  user_conn <- matrix(0, nrow = nr, ncol = nc)
-  
-  for(i in 1:nr){
-    user_conn[i, ] <- user_list[[i]]
-  }
-  
-  #Second, we construct a matrix to save the the connections of each item.
-  
-  item_list = list()
-  # Assign the weight to each user that connects to all items.
-  for(i in 1:nc){
-    vec <- rep(0, nr)
-    vec[!is.na(data[, i])] <- 1/sum(!is.na(data[, i]))
-    item_list[[i]] <- vec
-  }
-  
-  item_conn <- matrix(0, nrow = nc, ncol = nr)
-  
-  for(i in 1:nc){
-    item_conn[i, ] <- item_list[[i]]
-  }
-  #Third, we construct a big matrix to same all the connections between users and items as the weight, that is 1/I(a)I(b)
-  # We make the upper part of the big matrix.
-  matrix_conn_upp <- cbind(matrix(0, nrow = nr, ncol = nr), user_conn)
-  # We make the lower part of the big matrix.
-  matrix_conn_low <- cbind(item_conn, matrix(0, nrow = nc, ncol = nc))
-  # Hence, we get the big matrix 
-  matrix_conn <- rbind(matrix_conn_upp, matrix_conn_low)
-  # Now, we build the sim rank function
-  sim_matrix <- matrix(0, nrow = nr + nc , ncol = nc + nr)
-  diag(sim_matrix) <- 1 # initial simrank matrix with diagnal = 1
-  
-  # Finally we run the iteration
-  sim_list <- list()
-  for(i in 1:iter){
-    sim_matrix <- c * (matrix_conn %*% sim_matrix %*% t(matrix_conn))
-    diag(sim_matrix) <- 1
-    sim_list[[i]] <- sim_matrix
-    
-  }
-  return(sim_matrix)
-}
-
-
 ## Selecting Neighborhoods:Weight(Absolute correlation) Threshold
 
 corr_thresh <- function(mat, threshold){
