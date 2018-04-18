@@ -56,131 +56,234 @@ load("../output/movie_test.RData")
 #For dataset 1 (MS)
 
 #Pearson Correlation
-#pearson_corr_MS <- pearson_corr(MS_train)
-#save(pearson_corr_MS, file = "pearson_corr_MS.RData")
+#ms_pc <- pearson_corr(MS_train)
+#save(ms_pc, file = "ms_pc.RData")
 
 #Mean-square-difference
-#MSD_w_1 <- MSD_Weight(MS_train)
-#save(MSD_w_1, file = "../output/MSD_Data1.RData")
+#ms_msd <- MSD_Weight(MS_train)
+#save(ms_msd, file = "../output/ms_msd.RData")
 
 #SimRank
-#SR_MS <- simrank(MS_train)
-#save(SR-MS, file = "../output/simrank_MS_train")
+#ms_sr <- simrank(MS_train)
+#save(ms_sr, file = "../output/simrank_MS_train.RData")
 
 
 #For dataset 2 (Movie)
 
 #Pearson Correlation
-#pearson_corr_movie <- pearson_corr(movie_train)
-#save(pearson_corr_movie, file = "pearson_corr_movie.RData")
+#movie_pc <- pearson_corr(movie_train)
+#save(movie_pc, file = "movie_pc.RData")
 
 #Mean-square-difference
-#MSD_w_2 <- MSD_Weight(movie_train)
-#save(MSD_w_2, file = "../output/MSD_Data2.RData")
+#movie_msd <- MSD_Weight(movie_train)
+#save(movie_msd, file = "../output/movie_msd.RData")
 ```
 
 
 ## No Variance Weighting
 
-## Step 4: Selecting Neighbors + predict
+## Step 4: Selecting Neighbors
 ```{r}
 # Implementation on Dataset 1
 
 # MSD + WT
+# ms_msd_wt <- corr_thresh(ms_msd, 0.5)
+# save(ms_msd_wt, file = "../output/ms_msd_wt.RData")
+
 
 # MSD + BNN
-#BNN_1 <- Select_BNN(MSD_w_1, 20)
-#save(BNN_1, file = "../output/BNN_Data1.RData")
-#BNN_SR <- Select_BNN(SR_MS, 20)
-#save(BNN_SR, file = "../output/BNN_SR_Data1.RData")
+# ms_msd_bnn <- Select_BNN(ms_msd, 20)
+# save(ms_msd_bnn, file = "../output/ms_msd_bnn.RData")
 
 # MSD + combine
+# ms_msd_combine <- corr_thresh(ms_msd, 0.5)
+# save(ms_msd_combine, file = "../output/ms_msd_combine.RData")
+
 
 # PC + WT
-# selected_neighbor_MS <- corr_thresh(pearson_corr_MS, 0.5)
-# selected_neighbor_movie <- corr_thresh(pearson_corr_movie, 0.5)
+# ms_pc_wt <- corr_thresh(ms_pc, 0.5)
+# save(ms_pc_wt, file = "../output/ms_pc_wt.RData")
 
 # PC + BNN
+# ms_pc_bnn <- Select_BNN(ms_pc, 20)
+# save(ms_pc_bnn, file = "../output/ms_pc_bnn.RData")
 
 # PC + combine
+# ms_pc_combine <- combine(ms_pc, 0.005, 20)
+# save(ms_pc_combine, file = "../output/ms_pc_combine.RData")
 
 # Simrank + WT
+# ms_sr_wt <- corr_thresh(ms_sr, 0.5)
+# save(ms_sr_wt, file = "../output/ms_pc_wt.RData")
 
 # Simrank + BNN
+# ms_sr_bnn <- Select_BNN(ms_sr, 20)
+# save(ms_sr_bnn, file = "../output/ms_sr_bnn.RData")
 
 # Simrank + combine
+# ms_sr_combine <- combine(ms_sr, 0.005, 20)
+# save(ms_sr_combine, file = "../output/ms_sr_combine.RData")
 
 
 
 # Implementation on Dataset 2
 
 # MSD + WT
+# movie_msd_wt <- corr_thresh(movie_msd, 0.5)
+# save(movie_msd_wt, file = "../output/movie_msd_wt.RData")
+
 
 # MSD + BNN
-#BNN_2 <- Select_BNN(MSD_w_2, 20)
-#save(BNN_2, file = "../output/BNN_Data2.RData")
+# movie_msd_bnn <- Select_BNN(movie_msd, 20)
+# save(movie_msd_bnn, file = "../output/movie_msd_bnn.RData")
 
 # MSD + combine
+# movie_msd_combine <- combine(movie_msd, 0.005, 20)
+# save(movie_msd_combine, file = "../output/movie_msd_combine.RData")
 
 
 # PC + WT
+# movie_pc_wt <- corr_thresh(movie_pc, 0.5)
+# save(movie_pc_wt, file = "../output/movie_pc_wt.RData")
 
 # PC + BNN
+# movie_pc_bnn <- corr_thresh(movie_pc, 0.5)
+# save(movie_pc_bnn, file = "../output/movie_pc_bnn.RData")
 
 # PC + combine
-
-
+# movie_pc_combine <- combine(movie_pc, 0.005, 20)
+# save(movie_pc_combine, file = "../output/movie_pc_combine.RData")
 ```
 
-## Step5 : Valuation
+## Step 5 : Prediction
+```{r}
+# Implementation on Dataset 1
+
+# MSD + WT
+# pred_ms_msd_wt <- avg_dev_pred(MS_train,MS_test,ms_msd, ms_msd_wt)
+
+# MSD + BNN
+# ZScore_ms_msd_bnn<- ZScore_Mat(ms_msd, ms_msd_bnn, MS_train, MS_test)
+
+# MSD + combine
+# pred_ms_msd_combine <- avg_dev_pred(MS_train,MS_test,ms_msd, ms_msd_combine)
+
+
+# PC + WT
+# pred_ms_pc_wt <- avg_dev_pred(MS_train,MS_test,ms_pc, ms_pc_wt)
+
+# PC + BNN
+# ZScore_ms_pc_bnn<- ZScore_Mat(ms_pc, ms_pc_bnn, MS_train, MS_test)
+
+# PC + combine
+# pred_ms_pc_combine <- avg_dev_pred(MS_train,MS_test,ms_pc, ms_pc_combine)
+
+# Simrank + WT
+# pred_ms_sr_wt <- avg_dev_pred(MS_train,MS_test,ms_sr, ms_sr_wt)
+
+# Simrank + BNN
+# ZScore_ms_sr_bnn<- ZScore_Mat(ms_sr, ms_sr_bnn, MS_train, MS_test)
+
+# Simrank + combine
+# pred_ms_sr_combine <- avg_dev_pred(MS_train,MS_test, ms_sr, ms_sr_combine)
+
+
+
+# Implementation on Dataset 2
+
+# MSD + WT
+# pred_movie_msd_wt <- avg_dev_pred(movie_train,movie_test,movie_msd, movie_msd_wt)
+
+# MSD + BNN
+# ZScore_movie_msd_bnn<- ZScore_Mat(movie_msd, movie_msd_bnn, movie_train, movie_test)
+
+# MSD + combine
+# pred_movie_msd_combine <- avg_dev_pred(movie_train,movie_test,movie_msd, movie_msd_combine)
+
+
+# PC + WT
+# pred_movie_pc_wt <- avg_dev_pred(movie_train,movie_test,movie_pc, movie_pc_wt)
+
+# PC + BNN
+# ZScore_movie_pc_bnn<- ZScore_Mat(movie_pc, movie_pc_bnn, movie_train, movie_test)
+
+# PC + combine
+# pred_movie_pc_combine <- avg_dev_pred(movie_train,movie_test,movie_pc, movie_pc_combine)
+```
+
+## Step 6 : Valuation
 ```{r}
 # Implementation on Dataset 1: ranked scoring
 
 # MSD + WT
+# ms_msd_wt_RS <- Rank_Score(pred_ms_msd_wt, MS_test)
+# save(ms_msd_wt_RS, file = "../output/ms_msd_wt_RS.RData")
 
 # MSD + BNN
-# ZScore_mat_1 <- ZScore_Mat(MSD_w_1, BNN_1, MS_train, MS_test)
-# ms_msd_bnn_rs <- Rank_Score(ZScore_mat_1, MS_test)
-# save(ZScore_mat_1, file = "../output/ZScore_Data1.RData")
+# ms_msd_bnn_RS <- Rank_Score(ZScore_ms_msd_bnn, MS_test)
+# save(ms_msd_bnn_RS, file = "../output/ms_msd_bnn_RS.RData")
 
 
 # MSD + combine
+# ms_msd_combine_RS <- Rank_Score(pred_ms_msd_combine, MS_test)
+# save(ms_msd_combine_RS, file = "../output/ms_msd_combine_RS.RData")
 
 
 
 # PC + WT
+# ms_pc_wt_RS <- Rank_Score(pred_ms_pc_wt, MS_test)
+# save(ms_pc_wt_RS, file = "../output/ms_pc_wt_RS.RData")
+
 
 # PC + BNN
+# ms_pc_bnn_RS <- Rank_Score(ZScore_ms_pc_bnn, MS_test)
+# save(ms_pc_bnn_RS, file = "../output/ms_pc_bnn_RS.RData")
 
 # PC + combine
+# ms_pc_combine_RS <- Rank_Score(pred_ms_pc_combine, MS_test)
+# save(ms_pc_combine_RS, file = "../output/ms_pc_combine_RS.RData")
 
 # Simrank + WT
+# ms_sr_wt_RS <- Rank_Score(pred_ms_sr_wt, MS_test)
+# save(ms_sr_wt_RS, file = "../output/ms_sr_wt_RS.RData")
 
 # Simrank + BNN
+# ms_sr_bnn_RS <- Rank_Score(ZScore_ms_sr_bnn, MS_test)
+# save(ms_sr_bnn_RS, file = "../output/ms_sr_bnn_RS.RData")
 
 # Simrank + combine
-
+# ms_sr_combine_RS <- Rank_Score(pred_ms_sr_combine, MS_test)
+# save(ms_sr_combine_RS, file = "../output/ms_sr_combine_RS.RData")
 
 
 # Implementation on Dataset 2: MAE
 
 # MSD + WT
+# movie_msd_wt_MAE <- MAE(pred_movie_msd_wt, movie_test)
+# save(movie_msd_wt_MAE, file = "../output/movie_msd_wt_MAE.RData")
 
 
 # MSD + BNN
-# ZScore_mat_2 <- ZScore_Mat(MSD_w_2, BNN_2, movie_train, movie_test)
-# movie_msd_bnn_mae <- MAE(ZScore_mat_2, movie_test)
-# save(ZScore_mat_2, file = "../output/ZScore_Data2.RData")
+# movie_msd_bnn_MAE <- MAE(ZScore_movie_msd_bnn, movie_test)
+# save(movie_msd_bnn_MAE, file = "../output/movie_msd_bnn_MAE.RData")
 
 # MSD + combine
+# movie_msd_combine_MAE <- MAE(pred_movie_msd_combine, movie_test)
+# save(movie_msd_combine_MAE, file = "../output/movie_msd_combine_MAE.RData")
+
 
 
 # PC + WT
+# movie_pc_wt_MAE <- MAE(pred_movie_pc_wt, movie_test)
+# save(movie_pc_wt_MAE, file = "../output/movie_pc_wt_MAE.RData")
 
 # PC + BNN
+# movie_msd_pc_MAE <- MAE(ZScore_movie_pc_bnn, movie_test)
+# save(movie_msd_pc_MAE, file = "../output/movie_msd_pc_MAE.RData")
 
 # PC + combine
-
+# movie_pc_combine_MAE <- MAE(pred_movie_pc_combine, movie_test)
+# save(movie_pc_combine_MAE, file = "../output/movie_pc_combine_MAE.RData")
 ```
 
 
@@ -379,9 +482,18 @@ cv_fun <- function(train_data,test_data){
   return(validation_error)
   }
 
-
 #validation_error <- cv_fun(train_data,test_data)
 #save(validation_error, file=paste0("../output/validation_err.RData"))
+
+# Cluster number comparism
+load("../output/validation_err.RData")
+cv_error<-colMeans(validation_error)
+
+# setwd("../figs/")
+# jpeg(file=paste("cv_err",".jpg") )
+plot(c_list,cv_error,xlab="number of class",ylab="cv-error",col="blue",type="l")
+points(c_list,cv_error,col="red",type="o")
+#dev.off()
 
 
 class = c_list[which.min(cv_error)]
@@ -421,19 +533,3 @@ error_em<- MAE(estimate,test)
 error_em
 ```
 
-# Evaluation comparison 
-```{r}
-
-
-
-
-# Cluster number comparism
-load("../output/validation_err.RData")
-cv_error<-colMeans(validation_error)
-
-# setwd("../figs/")
-# jpeg(file=paste("cv_err",".jpg") )
-plot(c_list,cv_error,xlab="number of class",ylab="cv-error",col="blue",type="l")
-points(c_list,cv_error,col="red",type="o")
-#dev.off()
-```
