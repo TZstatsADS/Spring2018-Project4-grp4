@@ -20,7 +20,7 @@ Term: Spring 2018
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members approve our work presented in this GitHub repository including this contributions statement.
 + Guo, Du: Presentaion PowerPoint, SimRank Algorithm, Refine combination of Weight Threshold and Best-n-estimator.  
-+ Tong, Yu:  
++ Tong, Yu: Cluster model predictions, SimRank Algorithm  
 + Wen, Lan: Mean-Square-Difference, Best-n-estimator, Z-Score prediction (matrix form), Ranked Scoring & MAE evaluation
 + Yan, Xiuruo:  Main.rmd, EM algrithm in Cluster model, MAE evaluation, MemoryBased.R  
 + Zha, Yuhan: Pearson Correlation, Weight Threshold, Combination of Weight Threshold and Best-N-Estimator, Ranked Scoring evaluation   
