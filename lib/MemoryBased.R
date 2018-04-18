@@ -239,81 +239,6 @@ combine <- function(weight_mat, threshold, n){
 }
 
 
-######################## W-T Prediction
-
-avg_dev_pred <- function(train_data, test_data, pearson_correlation, selected_neighbors){
-
-  pred.matrix <- matrix(NA, nrow = nrow(train_data), ncol = ncol(train_data))
-  avg_rate_a <- apply(train_data, 1, mean)
-  #train_data[is.na(train_data)] <- 0
-  #test_data[is.na(test_data)] <- 0
-
-  for (a in 1:nrow(train_data)){
-    rate_u <- train_data[selected_neighbors[[a]],]
-    #avg_rate_u <- apply(data[selected_neighbors[[a]],], 1, mean)
-    weight_u <- pearson_correlation[a,selected_neighbors[[a]]]
-    if (length(selected_neighbor[[a]]) == 0) {
-      pred.matrix[a,] = avg_rate_a[a]
-    } else if (length(selected_neighbor[[a]]) == 1) {
-      pred.matrix[a,] = avg_rate_a[a] + 
-        (rate_u-avg_rate_a[selected_neighbor[[a]]])*weight_u / sum(weight_u)
-    } else {
-      pred.matrix[a, ] <- avg_rate_a[a]+
-        apply((rate_u-avg_rate_a[selected_neighbor[[a]]])*weight_u,2,sum)/sum(weight_u)
-    }
-
-  }
-  colnames(pred.matrix) = colnames(train_data)
-  rownames(pred.matrix) = rownames(train_data)
-  return(pred.matrix[rownames(train_data) %in% rownames(test_data),
-                     colnames(train_data) %in% colnames(test_data)])
-}
-
-
-
-######################## Prediction
-# Prediction: compute weighted average of z-scores
-
-ZScore <- function(weight_mat, nbor_mat, data_mat, user, content){
-  neighbors <- nbor_mat[user,]
-  numer <- rep(NA, length(neighbors))
-  for (u in 1:length(neighbors)){
-    nbor <- neighbors[u]
-    r_ui <- data_mat[nbor, content]
-    r_u <- mean(data_mat[nbor,], na.rm = T)
-    sd_u <- sd(data_mat[nbor,], na.rm = T)
-    w_au <- weight_mat[user, nbor]
-    num <- (r_ui - r_u)/sd_u * w_au
-    if (is.na(num) == FALSE){numer[u] <- (r_ui - r_u)/sd_u * w_au}
-    else{numer[u] <- 0}
-  }
-  r_a <- mean(data_mat[user,], na.rm = T)
-  sd_a <- sd(data_mat[user,], na.rm = T)
-  w_a <- sum(weight_mat[user, neighbors])
-  p_ai <- r_a + sd_a * sum(numer)/w_a
-  
-  return(p_ai)
-}
-
-
-ZScore_Mat <- function(weight_mat, nbor_mat, train_data, test_data){
-  r <- nrow(test_data)
-  c <- ncol(test_data)
-  users <- rownames(test_data)
-  contents <- colnames(test_data)
-  ZScore_mat <- matrix(NA, r, c)
-  for (i in 1:r){
-    for (j in 1:c){
-      if (is.na(test_data[i,j]) == F){
-        ZScore_mat[i,j] <- 
-          ZScore(weight_mat, nbor_mat, train_data, users[i], contents[j])
-      }
-    }
-  }
-  return (ZScore_mat)
-}
-
-
 ## Selecting Neighborhoods:Weight(Absolute correlation) Threshold
 
 corr_thresh <- function(mat, threshold){
@@ -366,15 +291,16 @@ combine <- function(weight_mat, threshold, n){
 }
 
 
+
 ######################## W-T Prediction
 
 avg_dev_pred <- function(train_data, test_data, pearson_correlation, selected_neighbors){
-
+  
   pred.matrix <- matrix(NA, nrow = nrow(train_data), ncol = ncol(train_data))
   avg_rate_a <- apply(train_data, 1, mean)
   #train_data[is.na(train_data)] <- 0
   #test_data[is.na(test_data)] <- 0
-
+  
   for (a in 1:nrow(train_data)){
     rate_u <- train_data[selected_neighbors[[a]],]
     #avg_rate_u <- apply(data[selected_neighbors[[a]],], 1, mean)
@@ -388,7 +314,7 @@ avg_dev_pred <- function(train_data, test_data, pearson_correlation, selected_ne
       pred.matrix[a, ] <- avg_rate_a[a]+
         apply((rate_u-avg_rate_a[selected_neighbor[[a]]])*weight_u,2,sum)/sum(weight_u)
     }
-
+    
   }
   colnames(pred.matrix) = colnames(train_data)
   rownames(pred.matrix) = rownames(train_data)
@@ -440,8 +366,30 @@ ZScore_Mat <- function(weight_mat, nbor_mat, train_data, test_data){
   return (ZScore_mat)
 }
 
-
-
+##############################prediction simrank
+ZScore_Mat_sr <- function(weight_mat, nbor_mat, train_data, test_data){
+  
+  #simrank_w_1 <- read.csv("simrank_MS_train.csv")
+  weight_mat <- weight_mat[, -1]
+  rownames(weight_mat) <- colnames(weight_mat)
+  
+  rownames(test_data) <- rownames(simrank_w_1)[1:nrow(test_data)]
+  rownames(train_data) <- rownames(simrank_w_1)
+  
+  r <- nrow(test_data)
+  c <- ncol(test_data)
+  users <- rownames(test_data)
+  contents <- colnames(test_data)
+  ZScore_mat <- matrix(NA, r, c)
+  for (i in 1:r){
+    for (j in 1:c){
+      if (is.na(test_data[i,j]) == F){
+        ZScore_mat[i,j] <- ZScore(weight_mat, nbor_mat, train_data, users[i], contents[j])
+      }
+    }
+  }
+  return (ZScore_mat)
+}
 
 # Evaluation 1: ranked scoring function
 ##################### rank score

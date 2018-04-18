@@ -230,9 +230,9 @@ load("../output/movie_test.RData")
 
 
 ## Simrank + BNN
-# ZScore_ms_sr_bnn_20<- ZScore_Mat(ms_sr, ms_sr_bnn_20, MS_train, MS_test)
+# ZScore_ms_sr_bnn_20<- ZScore_Mat_sr(ms_sr, ms_sr_bnn_20, MS_train, MS_test)
 # save(pred_ms_sr_bnn_20, "../output/Prediction_Results/pred_ms_sr_bnn_20.RData")
-# ZScore_ms_sr_bnn_40<- ZScore_Mat(ms_sr, ms_sr_bnn_40, MS_train, MS_test)
+# ZScore_ms_sr_bnn_40<- ZScore_Mat_sr(ms_sr, ms_sr_bnn_40, MS_train, MS_test)
 # save(pred_ms_sr_bnn_40, "../output/Prediction_Results/pred_ms_sr_bnn_40.RData")
 
 
