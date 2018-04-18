@@ -682,7 +682,7 @@ cm_predict &lt;- function(train_df, test_df, par){
     
     num &lt;- (t(phi)*prob_mu)%*%t(gamma[,,k]) #numerator in equation (2) of cluster model notes
     prob[,,k] &lt;- ifelse(num==den &amp; num == 0, runif(1)/6, num/den)
-    prob[,,7] &lt;- prob[,,7] + k*prob[,,k]
+    prob[,,7] &lt;- prob[,,7] + (k-1)*prob[,,k]
   }
   return(prob[,,7]*t(v[,,7]))
 }
@@ -781,9 +781,9 @@ MAE &lt;- function(pred, true){
   return(mae)
 }
 
-error_em&lt;- MAE(estimate,test)
+error_em&lt;- MAE(estimate,test) - 1
 error_em</code></pre>
-<pre><code>## [1] 2.803069</code></pre>
+<pre><code>## [1] 1.803069</code></pre>
 </div>
 <div id="compare-results" class="section level2">
 <h2>Compare results</h2>
@@ -1005,7 +1005,7 @@ Mean Square Difference
 </table>
 <pre class="r"><code>##Cluster mae
 cat(&quot;Cluster Model MAE =&quot;, error_em)</code></pre>
-<pre><code>## Cluster Model MAE = 2.803069</code></pre>
+<pre><code>## Cluster Model MAE = 1.803069</code></pre>
 </div>
 </div>
 

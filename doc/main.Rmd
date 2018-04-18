@@ -578,7 +578,7 @@ cm_predict <- function(train_df, test_df, par){
     
     num <- (t(phi)*prob_mu)%*%t(gamma[,,k]) #numerator in equation (2) of cluster model notes
     prob[,,k] <- ifelse(num==den & num == 0, runif(1)/6, num/den)
-    prob[,,7] <- prob[,,7] + k*prob[,,k]
+    prob[,,7] <- prob[,,7] + (k-1)*prob[,,k]
   }
   return(prob[,,7]*t(v[,,7]))
 }
@@ -676,7 +676,7 @@ MAE <- function(pred, true){
   return(mae)
 }
 
-error_em<- MAE(estimate,test)
+error_em<- MAE(estimate,test) - 1
 error_em
 ```
 
