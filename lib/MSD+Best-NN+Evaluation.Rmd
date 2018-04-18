@@ -126,14 +126,21 @@ load("../output/MS_train.RData")
 load("../output/MS_test.RData")
 
 MSD_w_1 <- MSD_Weight(MS_train)
-BNN_1 <- Select_BNN(MSD_w_1, 20)
-ZScore_mat_1 <- ZScore_Mat(MSD_w_1, BNN_1, MS_train, MS_test)
-RS <- Rank_Score(ZScore_mat_1, MS_test)
-RS
+BNN_11 <- Select_BNN(MSD_w_1, 20)
+BNN_12 <- Select_BNN(MSD_w_1, 40)
+ZScore_mat_11 <- ZScore_Mat(MSD_w_1, BNN_11, MS_train, MS_test)
+ZScore_mat_12 <- ZScore_Mat(MSD_w_1, BNN_12, MS_train, MS_test)
+RS_1 <- Rank_Score(ZScore_mat_11, MS_test)
+RS_2 <- Rank_Score(ZScore_mat_12, MS_test)
 
-save(MSD_w_1, file = "../output/MSD_Data1.RData")
-save(BNN_1, file = "../output/BNN_Data1.RData")
-save(ZScore_mat_1, file = "../output/ZScore_Data1.RData")
+RS_1
+RS_2
+
+save(MSD_w_1, file = "../output/MSD+Best-NN Result/MSD_Data1.RData")
+save(BNN_11, file = "../output/MSD+Best-NN Result/BNN1_Data1.RData")
+save(BNN_12, file = "../output/MSD+Best-NN Result/BNN2_Data1.RData")
+save(ZScore_mat_11, file = "../output/MSD+Best-NN Result/ZScore1_Data1.RData")
+save(ZScore_mat_12, file = "../output/MSD+Best-NN Result/ZScore2_Data1.RData")
 ```
 
 
@@ -144,12 +151,19 @@ load("../output/movie_train.RData")
 load("../output/movie_test.RData")
 
 MSD_w_2 <- MSD_Weight(movie_train)
-BNN_2 <- Select_BNN(MSD_w_2, 20)
-ZScore_mat_2 <- ZScore_Mat(MSD_w_2, BNN_2, movie_train, movie_test)
-MAE <- MAE(ZScore_mat_2, movie_test)
-MAE
+BNN_21 <- Select_BNN(MSD_w_2, 20)
+BNN_22 <- Select_BNN(MSD_w_2, 40)
+ZScore_mat_21 <- ZScore_Mat(MSD_w_2, BNN_21, movie_train, movie_test)
+ZScore_mat_22 <- ZScore_Mat(MSD_w_2, BNN_22, movie_train, movie_test)
+MAE1 <- MAE(ZScore_mat_21, movie_test)
+MAE2 <- MAE(ZScore_mat_22, movie_test)
 
-save(MSD_w_2, file = "../output/MSD_Data2.RData")
-save(BNN_2, file = "../output/BNN_Data2.RData")
-save(ZScore_mat_2, file = "../output/ZScore_Data2.RData")
+MAE1
+MAE2
+
+save(MSD_w_2, file = "../output/MSD+Best-NN Result/MSD_Data2.RData")
+save(BNN_21, file = "../output/MSD+Best-NN Result/BNN1_Data2.RData")
+save(BNN_22, file = "../output/MSD+Best-NN Result/BNN2_Data2.RData")
+save(ZScore_mat_21, file = "../output/MSD+Best-NN Result/ZScore1_Data2.RData")
+save(ZScore_mat_22, file = "../output/MSD+Best-NN Result/ZScore2_Data2.RData")
 ```
