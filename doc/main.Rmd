@@ -557,7 +557,7 @@ cm_predict <- function(train_df, test_df, par){
     v[,,k] <- ifelse(t(train_df)==(k-1), 1, 0)
     v[,,k] <- ifelse(is.na(v[,,k]),0,v[,,k])
   }
-  v[,,7] <- ifelse(!is.na(t(test_df)), 1, 0)
+  v[,,7] <- ifelse(!is.na(t(test_df)), 1, NA)
   
   ##using Naive Bayes formula
   prob <- array(0,c(N,M,7))
@@ -570,13 +570,12 @@ cm_predict <- function(train_df, test_df, par){
   phi <- exp(phi)
   
   den <- matrix(diag(prob_mu%*%phi), N, M, byrow=FALSE)   
-  #denominater in equation (2) of cluster model notes
-  
+ 
   
   for(k in 1:6){
     print(paste0("k = ", k))
     
-    num <- (t(phi)*prob_mu)%*%t(gamma[,,k]) #numerator in equation (2) of cluster model notes
+    num <- (t(phi)*prob_mu)%*%t(gamma[,,k])
     prob[,,k] <- ifelse(num==den & num == 0, runif(1)/6, num/den)
     prob[,,7] <- prob[,,7] + (k-1)*prob[,,k]
   }
@@ -656,7 +655,7 @@ load("../output/best_par.RData")
 
 ###estimate scores
 
-#estimate <- cm_ppredict(train, test, best_par)
+#estimate <- cm_ppredict(best_par,train)
 
 #write.csv(estimate, paste0("../output/cluster_model_estimate.csv"))
 
@@ -664,19 +663,16 @@ load("../output/best_par.RData")
 estimate <- read.csv("../output/cluster_model_estimate.csv")
 estimate <- estimate[,-1]
 
-# MAE of EM algorithm
-coltest <- colnames(test)
-colnames(estimate) <- movie
 
-coltest <- which(is.element(movie, coltest))
-estimate <- estimate[,coltest]
+
+# MAE of EM algorithm
 
 MAE <- function(pred, true){
   mae <- sum(abs(pred-test),na.rm = T)/sum(!is.na(abs(pred-test)))
   return(mae)
 }
 
-error_em<- MAE(estimate,test) - 1
+error_em<- MAE(estimate,test) 
 error_em
 ```
 

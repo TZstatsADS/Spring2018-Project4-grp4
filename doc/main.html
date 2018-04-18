@@ -661,7 +661,7 @@ cm_predict &lt;- function(train_df, test_df, par){
     v[,,k] &lt;- ifelse(t(train_df)==(k-1), 1, 0)
     v[,,k] &lt;- ifelse(is.na(v[,,k]),0,v[,,k])
   }
-  v[,,7] &lt;- ifelse(!is.na(t(test_df)), 1, 0)
+  v[,,7] &lt;- ifelse(!is.na(t(test_df)), 1, NA)
   
   ##using Naive Bayes formula
   prob &lt;- array(0,c(N,M,7))
@@ -674,13 +674,12 @@ cm_predict &lt;- function(train_df, test_df, par){
   phi &lt;- exp(phi)
   
   den &lt;- matrix(diag(prob_mu%*%phi), N, M, byrow=FALSE)   
-  #denominater in equation (2) of cluster model notes
-  
+ 
   
   for(k in 1:6){
     print(paste0(&quot;k = &quot;, k))
     
-    num &lt;- (t(phi)*prob_mu)%*%t(gamma[,,k]) #numerator in equation (2) of cluster model notes
+    num &lt;- (t(phi)*prob_mu)%*%t(gamma[,,k])
     prob[,,k] &lt;- ifelse(num==den &amp; num == 0, runif(1)/6, num/den)
     prob[,,7] &lt;- prob[,,7] + (k-1)*prob[,,k]
   }
@@ -761,7 +760,7 @@ load(&quot;../output/best_par.RData&quot;)
 
 ###estimate scores
 
-#estimate &lt;- cm_ppredict(train, test, best_par)
+#estimate &lt;- cm_ppredict(best_par,train)
 
 #write.csv(estimate, paste0(&quot;../output/cluster_model_estimate.csv&quot;))
 
@@ -769,21 +768,18 @@ load(&quot;../output/best_par.RData&quot;)
 estimate &lt;- read.csv(&quot;../output/cluster_model_estimate.csv&quot;)
 estimate &lt;- estimate[,-1]
 
-# MAE of EM algorithm
-coltest &lt;- colnames(test)
-colnames(estimate) &lt;- movie
 
-coltest &lt;- which(is.element(movie, coltest))
-estimate &lt;- estimate[,coltest]
+
+# MAE of EM algorithm
 
 MAE &lt;- function(pred, true){
   mae &lt;- sum(abs(pred-test),na.rm = T)/sum(!is.na(abs(pred-test)))
   return(mae)
 }
 
-error_em&lt;- MAE(estimate,test) - 1
+error_em&lt;- MAE(estimate,test) 
 error_em</code></pre>
-<pre><code>## [1] 1.803069</code></pre>
+<pre><code>## [1] 1.379653</code></pre>
 </div>
 <div id="compare-results" class="section level2">
 <h2>Compare results</h2>
@@ -1005,7 +1001,7 @@ Mean Square Difference
 </table>
 <pre class="r"><code>##Cluster mae
 cat(&quot;Cluster Model MAE =&quot;, error_em)</code></pre>
-<pre><code>## Cluster Model MAE = 1.803069</code></pre>
+<pre><code>## Cluster Model MAE = 1.379653</code></pre>
 </div>
 </div>
 
