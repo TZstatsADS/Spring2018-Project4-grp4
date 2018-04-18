@@ -512,6 +512,39 @@ em_fun <- function(data, C, thres){
   return(list(mu = mu, gamma = gamma))
 }
 
+
+
+cm_ppredict <- function(pars, data){
+  mu <- pars$mu
+  gamma <-pars$gamma
+  c <- dim(gamma)[2]
+  
+  
+  print("f")
+  visited <- apply(data, 1, function(x){return(which(is.na(x) == FALSE))})
+  numerator_c <- rep(NA, c)
+  denominator_c <- rep(NA, c)
+  predict_matrix <- matrix(NA, nrow = nrow(data), ncol = ncol(data))
+  user_predict <- rep(NA, 6)
+  for(n in 1:nrow(predict_matrix)){
+    for(m in 1:ncol(predict_matrix)){
+      for (k in 1:6){
+        for (i in 1:c){
+          gamma_c <- gamma[,i,]
+          numerator_c[i] <- mu[i] * gamma_c[m, k] * prod(diag(gamma_c[visited[[n]], data[n, visited[[n]]]])) 
+          denominator_c[i] <- mu[i] * prod(diag(gamma_c[visited[[n]], data[n, visited[[n]]]]))
+        }
+
+user_predict[k] <- sum(numerator_c) / sum(denominator_c) * (k-1)
+      }
+      predict_matrix[n,m] <-  sum(user_predict)
+    }
+    print(n)
+  }
+  return(predict_matrix)
+}
+
+
 #predict score estimate function
 cm_predict <- function(train_df, test_df, par){
   set.seed(2)
@@ -549,6 +582,7 @@ cm_predict <- function(train_df, test_df, par){
   }
   return(prob[,,7]*t(v[,,7]))
 }
+
 
 
 ### 5-fold cross validation to find best class number C among c_list(2,3,6,12)
@@ -622,7 +656,7 @@ load("../output/best_par.RData")
 
 ###estimate scores
 
-#estimate <- cm_predict(train, test, best_par)
+#estimate <- cm_ppredict(train, test, best_par)
 
 #write.csv(estimate, paste0("../output/cluster_model_estimate.csv"))
 
