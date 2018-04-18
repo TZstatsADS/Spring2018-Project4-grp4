@@ -46,7 +46,7 @@ combine <- function(weight_mat, threshold, n){
     if (length(thresh_neighbor[[i]]) < n) {
       select_neighbor[[i]] <- thresh_neighbor[[i]]
     } else {
-      select_neighbor[[i]] <- which(rownames(weight_mat) %in% names((sort(weight_mat[i,thresh_neighbor[[i]]],decreasing=T))))[1:n]
+      select_neighbor[[i]] <- which(rownames(weight_mat) %in% names((sort(weight_mat[i,thresh_neighbor[[i]]],decreasing=T))[1:n]))
     }
   }
   return(select_neighbor)
