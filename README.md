@@ -12,16 +12,16 @@ Term: Spring 2018
 	+ Wen, Lan
 	+ Yan, Xiuruo
 	+ Zha, Yuhan
-+ Project summary: In this project, we used memory-based algorithm and model-based algorithm to do collaborative filtering.
-	+ For memory-based algorithm: We use 1) Pearson similarity with no variance weighting to settle down the weight and Weight Threshold to select the neighbors; 2) Mean-Square-Difference with no variance weighting to settle down the weight and Best-n-estimator to select the neighbors; 3) SimRank with no variance weighting to settle down the weight and Combined method to select the neighbors.
-	+ For model-based algorithm: We use 1) EM algrithm to find gamma and mu; 2) estimate scores for movie data; 2) cross valuation to choose the best number of cluster; 3) evaluate the result with MAE
++ Project summary: In this project, we use memory-based algorithm and model-based algorithm to do collaborative filtering.
+	+ For memory-based algorithm: We use 1) Pearson correlation, Mean-Square-Difference and SimRank with no variance weighting to settle down the weight; 2) Weight Threshold, Best-n-estimator and Combined method to select the neighbors; 3) Z-Score to make predictions; 4) evaluate the results with Ranked-Scoring (Dataset 1) and MAE (Dataset 2).
+	+ For model-based algorithm: We use 1) EM algrithm to find gamma and mu; 2) estimate scores for movie data; 2) cross valuation to choose the best number of cluster; 3) evaluate the result with MAE.
 	+ Following are result analysis of different combinations of memory based algorithm:
 
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members approve our work presented in this GitHub repository including this contributions statement.
 + Guo, Du:   
 + Tong, Yu:  
-+ Wen, Lan: Mean-Square-Difference similarity, Best-n-estimator selecting neighbours, ranked scoring & MAE evaluation  
++ Wen, Lan: Mean-Square-Difference, Best-n-estimator, Z-Score prediction (matrix form), Ranked Scoring & MAE evaluation
 + Yan, Xiuruo:  Main.rmd, EM algrithm in Cluster model, MAE evaluation, MemoryBased.R  
 + Zha, Yuhan:  
 
