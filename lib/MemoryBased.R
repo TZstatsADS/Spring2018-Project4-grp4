@@ -99,33 +99,6 @@ corr_thresh <- function(mat, threshold){
 
 
 
-## Similarity Weight: mean-squared-difference function
-
-MSD_Weight <- function(data_mat){
-  nuser <- nrow(data_mat)
-  users <- rownames(data_mat)
-  diff_mat <- matrix(NA,nrow=nuser,ncol=nuser)
-  colnames(diff_mat) <- users
-  rownames(diff_mat) <- users
-  for (i in 1:nuser){
-    for (j in 1:nuser){
-      ri <- data_mat[i,]
-      rj <- data_mat[j,]
-      index <- (!is.na(ri))&(!is.na(rj))
-      if(sum(index)==0){diff_mat[i,j] <- 0}
-      else{
-        ri_new <- data_mat[i,index]
-        rj_new <- data_mat[j,index]
-        diff_mat[i,j] <- mean((ri_new-rj_new)^2)
-      }
-    }
-  }
-  L <- max(diff_mat)
-  weight_mat <- (L-diff_mat)/L
-  return(weight_mat)
-}
-
-
 
 ## Similarity Weight: SimRank for data1
 
