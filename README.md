@@ -17,7 +17,7 @@ Term: Spring 2018
 	+ For model-based algorithm: We use 1) EM algrithm to find gamma and mu; 2) estimate scores for movie data; 2) cross valuation to choose the best number of cluster; 3) evaluate the result with MAE.
 	+ Following are result analysis of different combinations of memory based algorithm:
 	
-	![image](figs/result_summary.jpg)
+	![image](figs/result_summary.JPG)
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members approve our work presented in this GitHub repository including this contributions statement.
 + Guo, Du: Presentaion PowerPoint, SimRank Algorithm, Refine combination of Weight Threshold and Best-n-estimator.  
